@@ -1,0 +1,59 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="ttt.list">
+      <field name="name">ttt list</field>
+      <field name="model">ttt.ttt</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="ttt.action_window">
+      <field name="name">ttt window</field>
+      <field name="res_model">ttt.ttt</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="ttt.action_server">
+      <field name="name">ttt server</field>
+      <field name="model_id" ref="model_ttt_ttt"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="ttt" id="ttt.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="ttt.menu_1" parent="ttt.menu_root"/>
+    <menuitem name="Menu 2" id="ttt.menu_2" parent="ttt.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="ttt.menu_1_list" parent="ttt.menu_1"
+              action="ttt.action_window"/>
+    <menuitem name="Server to list" id="ttt" parent="ttt.menu_2"
+              action="ttt.action_server"/>
+    -->
+  </data>
+</openerp>
