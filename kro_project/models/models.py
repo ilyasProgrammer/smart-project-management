@@ -26,8 +26,7 @@ class Problem(models.Model):
     causes = fields.Text('Причины')
     decision = fields.Text('Решение')
 
-
-    aim_ids = fields.Many2many('kro.aim', string=u'Цели')
+    aim_ids = fields.One2many('kro.aim', 'problem_id', string=u'Цели')
     state = fields.Selection([('draft', 'Черновик'),
                               ('approved', 'Утвержден'),
                               ('current', 'Текущий'),
@@ -40,8 +39,13 @@ class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
 
+    priority = fields.Selection([('0', 'Низкий'), ('1', 'Средний'), ('2', 'Высокий')], 'Priority', select=True)
+    problem_id = fields.Many2one('kro.problem', string='Проблема')
+    project_id = fields.Many2one(related='problem_id.project_id', readonly=True)
+    date_deadline = fields.Date('Срок планирования', select=True, copy=False)
     name = fields.Char(u'Заголовок', track_visibility='onchange', size=128, required=True, select=True)
-    task_ids = fields.Many2many('project.task', string=u'Цели')
+    user_plan_id = fields.Many2one('res.users', 'Ответственный за планирование', select=True, track_visibility='onchange')
+    task_ids = fields.One2many('project.task', 'aim_id', string=u'Задачи')
     state = fields.Selection([('draft', 'Черновик'),
                               ('approved', 'Утвержден'),
                               ('current', 'Текущий'),
@@ -49,7 +53,12 @@ class Aim(models.Model):
                               ], 'Статус', readonly=True, default='draft')
 
 
-# class Task(models.Model):
-#
-#     _inherit = 'project.task'
+class Task(models.Model):
 
+    _inherit = 'project.task'
+
+    aim_id = fields.Many2one('kro.aim')
+    project_id = fields.Many2one(related='aim_id.project_id', readonly=True, string='Проект')
+    problem_id = fields.Many2one(related='aim_id.problem_id', readonly=True, string='Проблема')
+    priority = fields.Selection([('0', 'Низкий'), ('1', 'Средний'), ('2', 'Высокий')], 'Priority', select=True)
+    user_plan_id = fields.Many2one('res.users', 'Ответственный за планирование', select=True, track_visibility='onchange')
