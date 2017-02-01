@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Kro project",
+    'name': "kro project",
     'description': """KRO PROJECT""",
     'author': "Ilyas",
     'website': "https://github.com/ilyasProgrammer",
     'category': 'Project',
     'version': '1.0',
-    'depends': ['base'],
+    'depends': ['project'],
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
