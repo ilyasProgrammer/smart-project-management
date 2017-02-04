@@ -6,13 +6,16 @@
     'website': "https://github.com/ilyasProgrammer",
     'category': 'Project',
     'version': '1.0',
-    'depends': ['project'],
+    'depends': [
+        'project',
+                ],
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
-        'views/templates.xml',
     ],
     'demo': [
-        'demo/demo.xml',
     ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
 }
