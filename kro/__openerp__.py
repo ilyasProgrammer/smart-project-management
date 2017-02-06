@@ -8,6 +8,7 @@
     'version': '1.0',
     'depends': [
         'project',
+        'project_task_default_stage',
                 ],
     'data': [
         # 'security/ir.model.access.csv',

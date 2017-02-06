@@ -33,6 +33,12 @@ class Problem(models.Model):
                               ('canceled', u'Отменен'),
                               ], u'Статус', readonly=True, default='draft')
 
+    @api.model
+    def _store_history(self, ids):
+        if 1:
+            return False
+        return True
+
 
 class Aim(models.Model):
     _name = 'kro.aim'
@@ -51,6 +57,12 @@ class Aim(models.Model):
                               ('canceled', u'Отменен'),
                               ], u'Статус', readonly=True, default='draft')
 
+    @api.model
+    def _store_history(self, ids):
+        if 1:
+            return False
+        return True
+
 
 class Task(models.Model):
     _inherit = 'project.task'
@@ -60,3 +72,9 @@ class Task(models.Model):
     problem_id = fields.Many2one(related='aim_id.problem_id', readonly=True, string=u'Проблема')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Priority', select=True)
     user_plan_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
+
+    @api.model
+    def _store_history(self, ids):
+        if 1:
+            return False
+        return True
