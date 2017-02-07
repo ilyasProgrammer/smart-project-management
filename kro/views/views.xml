@@ -63,35 +63,56 @@
         <field name="priority" eval="256"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <field name="project_id" position="after">
-                <field name="user_aim_id"/>
-                <field name="user_admin_id"/>
+            <field name="stage_id" position="replace">
+                <field name="state" widget="statusbar" clickable="True"/>
+                <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" invisible="1"/>
             </field>
-            <field name="user_id" position="replace">
-                <field name="user_id" string="Инициатор"
+            <field name="project_id" position="after">
+                <field name="addressee_id"/>
+            </field>
+            <field name="user_id" position="replace"></field>
+            <field name="date_deadline" position="before">
+                <field name="create_date" string="Дата регистрации"/>
+            </field>
+            <field name="date_deadline" position="after">
+                <field name="fact_date"/>
+                <field name="user_id" string="Инициатор" readonly="1"
                                 options='{"no_open": True}'
                                 on_change="onchange_user_id(user_id, context)"
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
             </field>
-            <field name="date_deadline" position="after">
-                <field name="create_date" string="Дата регистрации"/>
-                <field name="fact_date"/>
-            </field>
             <field name="description" position="before">
-                <div class="oe_clear"/>
-                <group></group>
-                <h2>Формулировка проблемы (симптомы)</h2>
+                <h2>
+                    <div style="width: 100%; float: left;">
+                        <div style="float: left; width: 33%;">
+                            <div style="margin: 10px; padding: 10px;">
+                                Симптомы
+                            </div>
+                        </div>
+                        <div style="float: left; width: 33%;">
+                            <div style="margin: 10px; padding: 10px;">
+                                Причины
+                            </div>
+                        </div>
+                        <div style="float: right; width: 33%;">
+                            <div style="margin: 10px; padding: 10px;">
+                                Последствия
+                            </div>
+                        </div>
+                    </div>
+                </h2>
             </field>
             <field name="description" position="after">
-                <h2>Причины</h2>
-                <field name="causes"/>
-                <h2>К чему приведет, если не решить</h2>
-                <field name="effects"/>
+                <!--<h2>Причины</h2>-->
+                <!--<field name="causes"/>-->
+                <!--<h2>К чему приведет, если не решить</h2>-->
+                <!--<field name="effects"/>-->
                 <h2>Решение и обоснование</h2>
                 <field name="decision"/>
                 <div class="oe_clear"/>
             </field>
             <field name="date_last_stage_update" position="after">
+                <field name="user_aim_id"/>
                 <field name="reason_aside_problem"/>
                 <field name="reason_aside_aim"/>
                 <field name="reason_aside_task"/>
