@@ -103,10 +103,6 @@
                 </h2>
             </field>
             <field name="description" position="after">
-                <!--<h2>Причины</h2>-->
-                <!--<field name="causes"/>-->
-                <!--<h2>К чему приведет, если не решить</h2>-->
-                <!--<field name="effects"/>-->
                 <h2>Решение и обоснование</h2>
                 <field name="decision"/>
                 <div class="oe_clear"/>
@@ -163,11 +159,27 @@
         <field name="model">kro.aim</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <sheet position="before">
+                <header>
+                    <field name="state" widget="statusbar" clickable="True"/>
+                </header>
+            </sheet>
+            <field name="date_deadline" position="replace">
+                <field name="date_deadline" invisible="1"/>
+            </field>
+            <field name="date_deadline" position="before">
+                <field name="create_date" string="Дата регистрации"/>
+            </field>
+            <field name="project_id" position="after">
+                <field name="problem_id"/>
+                <field name="user_plan_id"/>
+            </field>
             <page name="description_page" position="after">
                 <page string="Задачи">
                     <field name="task_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_task_form'}"/>
                 </page>
             </page>
+            <field name="user_id" position="replace"></field>
         </field>
     </record>
     <record id="action_aims" model="ir.actions.act_window">
@@ -196,57 +208,91 @@
         <field name="act_window_id" ref="action_aims"/>
     </record>
 
-    <record id="view_kro_task_tree" model="ir.ui.view">
-        <field name="name">kro.task.tree</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
+    <!--<record id="view_kro_task_tree" model="ir.ui.view">-->
+        <!--<field name="name">kro.task.tree</field>-->
+        <!--<field name="model">project.task</field>-->
+        <!--<field name="inherit_id" ref="project.view_task_tree2"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<data></data>-->
+        <!--</field>-->
+    <!--</record>-->
+    <!--<record id="view_kro_task_form" model="ir.ui.view">-->
+        <!--<field name="name">kro.task.form</field>-->
+        <!--<field name="model">project.task</field>-->
+        <!--<field name="inherit_id" ref="project.view_task_form2"/>-->
+        <!--<field name="arch" type="xml">-->
+           <!--<data></data>-->
+        <!--</field>-->
+    <!--</record>-->
+    <!--<record id="action_task" model="ir.actions.act_window">-->
+        <!--<field name="name">Tasks</field>-->
+        <!--<field name="res_model">project.task</field>-->
+        <!--<field name="view_type">form</field>-->
+        <!--<field name="domain">[]</field>-->
+        <!--<field name="view_mode">list,form</field>-->
+        <!--<field name="context">{}</field>-->
+        <!--<field name="help" type="html">-->
+            <!--<p class="oe_view_nocontent_create">-->
+                <!--Создайте новую задачу.-->
+            <!--</p>-->
+        <!--</field>-->
+    <!--</record>-->
+    <!--<record id="action_task_tree" model="ir.actions.act_window.view">-->
+        <!--<field name="sequence" eval="1"/>-->
+        <!--<field name="view_mode">tree</field>-->
+        <!--<field name="view_id" ref="view_kro_task_tree"/>-->
+        <!--<field name="act_window_id" ref="action_task"/>-->
+    <!--</record>-->
+    <!--<record id="action_task_form" model="ir.actions.act_window.view">-->
+        <!--<field name="sequence" eval="1"/>-->
+        <!--<field name="view_mode">form</field>-->
+        <!--<field name="view_id" ref="view_kro_task_form"/>-->
+        <!--<field name="act_window_id" ref="action_task"/>-->
+    <!--</record>-->
+    <record id="view_calendar_form" model="ir.ui.view">
+        <field name="name">calendar.event.inherit</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
-            <data></data>
+            <sheet position="before">
+                <header>
+                    <field name="state" widget="statusbar" clickable="True"/>
+                </header>
+            </sheet>
+            <field name="partner_ids" position="after">
+                <group>
+                    <group>
+                        <field name="user_id" string="Модератор"/>
+                        <field name="approver_id"/>
+                        <field name="user_plan_id"/>
+                    </group>
+                </group>
+            </field>
+            <notebook position="inside">
+                <page name="bound" string="Связи">
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="problem_id"/>
+                            <field name="aim_id"/>
+                            <field name="task_id"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+            <label for="description" position="replace"></label>
+            <field name="description" position="replace">
+                <h3>Цели обсуждения</h3>
+                <field name="description"/>
+                <h3>Требуемые результаты</h3>
+                <field name="expectations"/>
+            </field>
         </field>
     </record>
-    <record id="view_kro_task_form" model="ir.ui.view">
-        <field name="name">kro.task.form</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_form2"/>
-        <field name="arch" type="xml">
-           <data></data>
-        </field>
-    </record>
-    <record id="action_task" model="ir.actions.act_window">
-        <field name="name">Tasks</field>
-        <field name="res_model">project.task</field>
-        <field name="view_type">form</field>
-        <field name="domain">[]</field>
-        <field name="view_mode">list,form</field>
-        <field name="context">{}</field>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Создайте новую задачу.
-            </p>
-        </field>
-    </record>
-    <record id="action_task_tree" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_kro_task_tree"/>
-        <field name="act_window_id" ref="action_task"/>
-    </record>
-    <record id="action_task_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_kro_task_form"/>
-        <field name="act_window_id" ref="action_task"/>
-    </record>
-
     <menuitem action="action_projects" id="project_list" name="Проекты" parent="kro_proj_menu" sequence="1"/>
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
-    <menuitem action="action_task" id="task_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
+    <!--<menuitem action="action_task" id="task_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>-->
 
 </data>
 </openerp>
-
-
-
-
-

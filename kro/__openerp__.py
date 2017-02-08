@@ -8,6 +8,7 @@
     'version': '1.0',
     'depends': [
         'project',
+        'calendar',
                 ],
     'data': [
         'security/ir.model.access.csv',
