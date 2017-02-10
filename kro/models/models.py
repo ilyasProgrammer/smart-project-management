@@ -27,6 +27,7 @@ class Problem(models.Model):
     reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
     reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
     reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
+    reason_correction = fields.Text(u'Причина коррекции')
     aim_ids = fields.One2many('kro.aim', 'problem_id', ondelete="cascade", string=u'Цели')
     # stage_id = fields.Many2one('project.task.type', u'Статус', track_visibility='onchange', select=True, domain="[('project_ids', '=', project_id)]", copy=False),
     state = fields.Selection([('plan', u'Планирование'),
@@ -48,15 +49,17 @@ class Problem(models.Model):
 class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
-
+    date_start = fields.Datetime(u'Дата начала')
+    date_end = fields.Datetime(u'Дата завершения')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null')
-    # project_id = fields.Many2one(related='problem_id.project_id', readonly=True)
-    # date_deadline = fields.Date(u'Срок планирования', select=True, copy=False)
-    # name = fields.Char(u'Заголовок', track_visibility='onchange', size=128, select=True)
+    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
+    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
+    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
+    reason_correction = fields.Text(u'Причина коррекции')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
     job_ids = fields.Many2many('kro.job',   ondelete="cascade", string=u'Задачи')
-    task_ids = fields.Many2many('project.task',  ondelete="cascade", string=u'Задания')
+    task_ids = fields.One2many('project.task', 'aim_id', ondelete="cascade", string=u'Задания')
     task_count = fields.Integer(compute='_task_count')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
@@ -106,12 +109,18 @@ class Job(models.Model):
     _name = 'kro.job'
     _inherit = 'project.task'
     _description = u'Задача'
-
+    date_start = fields.Datetime(u'Дата начала')
+    date_end = fields.Datetime(u'Дата завершения')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
     task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания')
     task_count = fields.Integer(compute='_task_count')
+    total_time = fields.Integer(compute='_total_time', string=u'Затраченное время')
+    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
+    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
+    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
+    reason_correction = fields.Text(u'Причина коррекции')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
                               ('corrections', u'Отложена'),
@@ -126,16 +135,33 @@ class Job(models.Model):
             return False
         return True
 
+    @api.model
+    def _total_time(self, ids):
+        if 1:
+            return False
+        return True
+
 
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
-
-    job_id = fields.Many2one('kro.job')
-    # project_id = fields.Many2one(related='aim_id.project_id', readonly=True, string=u'Проект')
-    # problem_id = fields.Many2one(related='aim_id.problem_id', readonly=True, string=u'Проблема')
+    date_start_ex = fields.Datetime(u'Старт')
+    date_end_ex = fields.Datetime(u'Финиш')
+    date_start_pr = fields.Datetime(u'Старт')
+    date_end_pr = fields.Datetime(u'Финиш')
+    date_start_ap = fields.Datetime(u'Старт')
+    date_end_ap = fields.Datetime(u'Финиш')
+    problem_id = fields.Many2one(related='aim_id.problem_id', readonly=True, string=u'Проблема')
+    aim_id = fields.Many2one('kro.aim', string=u'Цель')
+    job_id = fields.Many2one('kro.job', string=u'Задача')
+    required_result = fields.Text(u'Требуемый результат')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Priority', select=True)
-    user_plan_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
+    user_executor_id = fields.Many2one('res.users', string=u'Исполнитель')
+    user_predicator_id = fields.Many2one('res.users', string=u'Утверждающий')
+    user_approver_id = fields.Many2one('res.users', string=u'Подтверждающий')
+    approved_by_executor = fields.Boolean(u'Согласовал исполнитель')
+    approved_by_predicator = fields.Boolean(u'Согласовал утверждающий')
+    approved_by_approver = fields.Boolean(u'Согласовал подтверждающий')
     state = fields.Selection([('plan', u'Планирование'),
                               ('moved', u'Согласование'),
                               ('process', u'Назначено'),
