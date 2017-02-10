@@ -155,6 +155,7 @@
                 <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
                     <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                    <field name="job_id"/>
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
@@ -281,8 +282,9 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <page name='description_page' position="after">
+                <field name="message_needaction" invisible="1"/>
                 <page string="Задания">
-                    <field name="task_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                    <field name="task_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'message_needaction':False, 'form_view_ref': 'project.view_task_form2'}"/>
                 </page>
             </page>
             <sheet position="before">
@@ -337,6 +339,7 @@
             <field name="stage_id" position="replace">
                 <field name="state" widget="statusbar" clickable="True"/>
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" invisible="1"/>
+                <field name="message_needaction" invisible="1"/>
             </field>
         </field>
     </record>

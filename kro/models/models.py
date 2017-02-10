@@ -110,7 +110,7 @@ class Job(models.Model):
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
-    task_ids = fields.Many2many('project.task', ondelete="cascade", string=u'Задания')
+    task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания')
     task_count = fields.Integer(compute='_task_count')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
@@ -119,6 +119,7 @@ class Job(models.Model):
                               ('finished', u'Завершена'),
                               ], u'Статус', readonly=True, default='plan')
 
+
     @api.model
     def _store_history(self, ids):
         if 1:
@@ -126,12 +127,11 @@ class Job(models.Model):
         return True
 
 
-
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
 
-    # aim_id = fields.Many2one('kro.aim')
+    job_id = fields.Many2one('kro.job')
     # project_id = fields.Many2one(related='aim_id.project_id', readonly=True, string=u'Проект')
     # problem_id = fields.Many2one(related='aim_id.problem_id', readonly=True, string=u'Проблема')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Priority', select=True)
@@ -146,25 +146,4 @@ class Task(models.Model):
                               ('closed', u'Подтверждено'),
                               ('closed', u'Завершено'),
                               ('closed', u'Коррекция'),
-                              ], u'Статус',  default='plan')
-
-
-class Event(models.Model):
-    _inherit = 'calendar.event'
-
-    approver_id = fields.Many2one('res.users', u'Утверждающий', select=True, track_visibility='onchange', ondelete='set null')
-    user_plan_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete='set null')
-    project_id = fields.Many2one('project.project', u'Связанный проект', select=True, ondelete='set null')
-    problem_id = fields.Many2one('kro.problem', u'Связанная проблема', select=True, ondelete='set null')
-    aim_id = fields.Many2one('kro.aim', u'Связанная цель', select=True, ondelete='set null')
-    task_id = fields.Many2one('project.task', u'Связанная задача', select=True, ondelete='set null')
-    points = fields.Text(u'Цели')
-    expectations = fields.Text(u'Требуемые результаты')
-    state = fields.Selection([('plan', u'Планирование'),
-                              ('agreement', u'Согласование'),
-                              ('set', u'Назначена'),
-                              ('agreed', u'Утверждение'),
-                              ('done', u'Проведена'),
-                              ('approved', u'Утверждена'),
-                              ('closed', u'Завершена'),
                               ], u'Статус',  default='plan')
