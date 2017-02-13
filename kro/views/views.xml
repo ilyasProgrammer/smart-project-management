@@ -24,7 +24,7 @@
         <field name="model">project.project</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
+                <field name="name" string="Название"/>
                 <field name="user_id"/>
             </tree>
         </field>
@@ -126,7 +126,8 @@
         <field name="model">kro.problem</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
+                <field name="name" string="Название"/>
+                <field name="state"/>
                 <field name="addressee_id"/>
                 <field name="kro_project_id"/>
                 <field name="user_id"/>
@@ -215,7 +216,13 @@
         <field name="model">kro.aim</field>
         <field name="inherit_id" ref="project.view_task_tree2"/>
         <field name="arch" type="xml">
-            <data></data>
+            <tree>
+                <field name="name" string="Название"/>
+                <field name="state"/>
+                <field name="problem_id"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+            </tree>
         </field>
     </record>
     <record id="kro_aim_tasks" model="ir.ui.view">
@@ -352,7 +359,14 @@
         <field name="model">kro.job</field>
         <field name="inherit_id" ref="project.view_task_tree2"/>
         <field name="arch" type="xml">
-            <data></data>
+            <tree>
+                <field name="name" string="Название"/>
+                <field name="state"/>
+                <field name="project_id"/>
+                <field name="problem_id"/>
+                <field name="aim_id"/>
+                <field name="user_id"/>
+            </tree>
         </field>
     </record>
     <record id="action_job" model="ir.actions.act_window">
