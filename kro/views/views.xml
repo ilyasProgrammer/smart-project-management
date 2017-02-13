@@ -3,16 +3,6 @@
 <data>
     <menuitem name="Project" id="kro_proj_menu" parent="base.menu_main_pm" sequence="1"/>
     <!--ПРОЕКТ - PROJECT-->
-    <record id="view_kro_project_tree" model="ir.ui.view">
-        <field name="name">kro.project.tree</field>
-        <field name="model">project.project</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="user_id"/>
-            </tree>
-        </field>
-    </record>
     <record id="view_kro_project_form" model="ir.ui.view">
         <field name="name">kro.project.form</field>
         <field name="model">project.project</field>
@@ -27,6 +17,16 @@
                     <field name="problem_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_problem_form'}"/>
                 </page>
             </notebook>
+        </field>
+    </record>
+    <record id="view_kro_project_tree" model="ir.ui.view">
+        <field name="name">kro.project.tree</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+            </tree>
         </field>
     </record>
     <record id="action_projects" model="ir.actions.act_window">
@@ -52,14 +52,6 @@
         <field name="act_window_id" ref="action_projects"/>
     </record>
     <!--ПРОБЛЕМА - PROBLEM-->
-    <record id="view_kro_problem_tree" model="ir.ui.view">
-        <field name="name">kro.problem.tree</field>
-        <field name="model">kro.problem</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
-        <field name="arch" type="xml">
-            <data></data>
-        </field>
-    </record>
     <record id="view_kro_problem_form" model="ir.ui.view">
         <field name="name">kro.problem.form</field>
         <field name="model">kro.problem</field>
@@ -127,6 +119,17 @@
                     <field name="aim_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_aim_form'}"/>
                 </page>
             </page>
+        </field>
+    </record>
+    <record id="view_kro_problem_tree" model="ir.ui.view">
+        <field name="name">kro.problem.tree</field>
+        <field name="model">kro.problem</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <field name="name"/>
+            <field name="addressee_id"/>
+            <field name="kro_project_id"/>
+            <field name="user_id"/>
         </field>
     </record>
     <record id="action_problems" model="ir.actions.act_window">

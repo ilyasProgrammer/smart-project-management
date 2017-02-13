@@ -156,7 +156,7 @@ class Task(models.Model):
     date_end_ap = fields.Datetime(u'Финиш')
     job_id = fields.Many2one('kro.job', string=u'Задача', readonly=True)
     aim_id = fields.Many2one('kro.aim', string=u'Цель', readonly=True)
-    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель от задачи', readonly=True)
+    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True)
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
     project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True)
     required_result = fields.Text(u'Требуемый результат')
