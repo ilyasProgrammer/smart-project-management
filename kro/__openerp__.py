@@ -9,6 +9,8 @@
     'depends': [
         'project',
         'calendar',
+        'reminder_task_deadline',
+        'project_gantt8',
                 ],
     'data': [
         'security/ir.model.access.csv',

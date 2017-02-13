@@ -19,6 +19,9 @@
         <field name="priority" eval="256"/>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <field name="use_tasks" position="replace">
+                <field name="use_tasks" invisible="1"/>
+            </field>
             <notebook position="inside">
                 <page string="Проблемы">
                     <field name="problem_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_problem_form'}"/>
@@ -63,11 +66,16 @@
         <field name="priority" eval="256"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" placeholder="Заголовок проблемы ..."/>
+            </field>
             <field name="stage_id" position="replace">
                 <field name="state" widget="statusbar" clickable="True"/>
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" invisible="1"/>
             </field>
-            <field name="project_id" position="after">
+            <field name="project_id" position="replace">
+                <field name="project_id" invisible="1"/>
+                <field name="kro_project_id"/>
                 <field name="addressee_id"/>
             </field>
             <field name="user_id" position="replace"></field>
@@ -216,6 +224,9 @@
         <field name="model">kro.aim</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="name" position="replace">
+            <field name="name" placeholder="Заголовок цели ..."/>
+            </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" type="object" name="action_tasks" icon="fa-tasks" context="{'task_ids': task_ids}">
                     <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
@@ -297,6 +308,9 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="priority" eval="256" />
         <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" placeholder="Заголовок задачи ..."/>
+            </field>
             <page name='description_page' position="after">
                 <field name="message_needaction" invisible="1"/>
                 <page string="Задания">
@@ -321,6 +335,7 @@
             </field>
             <field name="project_id" position="after">
                 <field name="problem_id"/>
+                <field name="aim_id"/>
                 <field name="user_id"/>
             </field>
             <field name="user_id" position="replace"></field>
@@ -363,6 +378,9 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" placeholder="Заголовок задания ..."/>
+            </field>
             <field name="stage_id" position="replace">
                 <field name="state" widget="statusbar" clickable="True"/>
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" invisible="1"/>
@@ -373,7 +391,8 @@
             </field>
             <field name="project_id" position="after">
                 <field name="problem_id"/>
-                <field name="aim_id"/>
+                <field name="aim_id" attrs="{'invisible': [('aim_id', '=', False)]}"/>
+                <field name="job_aim_id" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
                 <field name="job_id"/>
             </field>
             <notebook position="before">
@@ -453,7 +472,18 @@
             </kanban>
         </field>
     </record>
-
+    <record id="kro_action_view_task" model="ir.actions.act_window">
+        <field name="name">Задания</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="project.view_task_search_form"/>
+        <field name="help" type="html">
+            <p>
+                Задания
+            </p>
+        </field>
+    </record>
     <record id="view_calendar_form" model="ir.ui.view">
         <field name="name">calendar.event.inherit</field>
         <field name="model">calendar.event</field>
@@ -499,7 +529,7 @@
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="project.action_view_task" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
+    <menuitem action="kro_action_view_task" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
 
 </data>
 </openerp>
