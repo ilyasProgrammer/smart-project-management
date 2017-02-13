@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 a,a,model_kro_problem,project.group_project_user,1,1,1,1
 a1,a1,model_kro_aim,project.group_project_user,1,1,1,1
+a2,a2,project.model_task,project.group_project_user,1,1,1,1
