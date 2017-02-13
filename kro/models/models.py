@@ -127,7 +127,7 @@ class Job(models.Model):
     reason_correction = fields.Text(u'Причина коррекции')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
-                              ('corrections', u'Отложена'),
+                              ('suspended', u'Отложена'),
                               ('corrections', u'Коррекция'),
                               ('finished', u'Завершена'),
                               ], u'Статус', readonly=True, default='plan')
@@ -168,13 +168,13 @@ class Task(models.Model):
     approved_by_predicator = fields.Boolean(u'Согласовал утверждающий')
     approved_by_approver = fields.Boolean(u'Согласовал подтверждающий')
     state = fields.Selection([('plan', u'Планирование'),
-                              ('moved', u'Согласование'),
-                              ('process', u'Назначено'),
-                              ('taken', u'Выполнение'),
-                              ('suspended', u'Утверждение'),
-                              ('canceled', u'Утверждено'),
-                              ('closed', u'Подтверждение'),
-                              ('closed', u'Подтверждено'),
-                              ('closed', u'Завершено'),
-                              ('closed', u'Коррекция'),
+                              ('agreement', u'Согласование'),
+                              ('assigned', u'Назначено'),
+                              ('execution', u'Выполнение'),
+                              ('stating', u'Утверждение'),
+                              ('stated', u'Утверждено'),
+                              ('approvement', u'Подтверждение'),
+                              ('approved', u'Подтверждено'),
+                              ('finished', u'Завершено'),
+                              ('correction', u'Коррекция'),
                               ], u'Статус',  default='plan')
