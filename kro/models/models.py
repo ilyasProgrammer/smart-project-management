@@ -71,8 +71,8 @@ class Aim(models.Model):
 
     @api.model
     def action_tasks(self, active_id):
-        search_view = self.env['ir.model.data'].get_object_reference('kro', 'act_task_all')
-        view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_task_search_form')
+        search_view = self.env['ir.model.data'].get_object_reference('kro', 'kro_aim_all_tasks')
+        view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_aim_task_search_form')
         aim = self.env['kro.aim'].browse(active_id)
         job_tasks_ids = []
         for r in aim.job_ids:
