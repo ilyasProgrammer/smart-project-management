@@ -499,7 +499,7 @@
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem id="project.menu_action_view_task" name="Задания" parent="kro_proj_menu" sequence="5"/>
+    <menuitem action="project.action_view_task" name="Задания" parent="kro_proj_menu" sequence="5"/>
 
 </data>
 </openerp>
