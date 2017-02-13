@@ -124,7 +124,6 @@
     <record id="view_kro_problem_tree" model="ir.ui.view">
         <field name="name">kro.problem.tree</field>
         <field name="model">kro.problem</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
@@ -137,7 +136,7 @@
     <record id="action_problems" model="ir.actions.act_window">
         <field name="name">Проблемы</field>
         <field name="res_model">kro.problem</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую проблему.
@@ -280,7 +279,7 @@
         <field name="res_model">kro.aim</field>
         <field name="view_type">form</field>
         <field name="domain">[]</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -361,7 +360,7 @@
         <field name="res_model">kro.job</field>
         <field name="view_type">form</field>
         <field name="domain">[]</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
