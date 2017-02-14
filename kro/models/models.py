@@ -13,7 +13,7 @@ class Problem(models.Model):
     _name = 'kro.problem'
     _inherit = 'project.task'
 
-    kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True)
+    kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
     date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False)
     fact_date = fields.Date(u'Фактическая дата', select=True)
     # user_id = fields.Many2one('res.users', 'Инициатор', select=True, track_visibility='onchange')
@@ -39,12 +39,23 @@ class Problem(models.Model):
                               ('canceled', u'Отклонена'),
                               ('closed', u'Закрыта'),
                               ], u'Статус',  default='plan')
+    remaining_hours = fields.Boolean()
+    effective_hours = fields.Boolean()
+    total_hours = fields.Boolean()
+    progress = fields.Boolean()
+    delay_hours = fields.Boolean()
+    timesheet_ids = fields.Boolean()
+    analytic_account_id = fields.Boolean()
 
     @api.model
     def _store_history(self, ids):
         if 1:
             return False
         return True
+
+    @api.model
+    def _hours_get(self, ids):
+        return
 
 
 class Aim(models.Model):
@@ -68,6 +79,30 @@ class Aim(models.Model):
                               ('corrections', u'Коррекция'),
                               ('finished', u'Завершена'),
                               ], u'Статус', readonly=True, default='plan')
+    remaining_hours = fields.Boolean()
+    effective_hours = fields.Boolean()
+    total_hours = fields.Boolean()
+    planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов всего')
+    total_time = fields.Integer(compute='_time_count', string=u'Затраченно часов всего')
+    progress = fields.Float(compute='_time_count', string=u'Прогресс')
+    delay_hours = fields.Boolean()
+    timesheet_ids = fields.Boolean()
+    analytic_account_id = fields.Boolean()
+
+    @api.one
+    @api.depends('job_ids')
+    def _time_count(self):
+        planned_hours = 0
+        total_time = 0
+        planned_hours += sum([r.planned_hours for r in self.task_ids])
+        total_time += sum([r.effective_hours for r in self.task_ids])
+        for rec in self.job_ids:
+            planned_hours += sum([r.planned_hours for r in rec.task_ids])
+            total_time += sum([r.effective_hours for r in rec.task_ids])
+        if total_time and planned_hours:
+            self.planned_hours = planned_hours
+            self.total_time = total_time
+            self.progress = round(min(100.0 * total_time / planned_hours, 99.99), 2)
 
     @api.model
     def action_tasks(self, active_id):
@@ -106,6 +141,10 @@ class Aim(models.Model):
             return False
         return True
 
+    @api.model
+    def _hours_get(self, ids):
+        return
+
 
 class Job(models.Model):
     _name = 'kro.job'
@@ -119,8 +158,9 @@ class Job(models.Model):
     project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', readonly=True)
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange')
     task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания')
-    task_count = fields.Integer(compute='_task_count')
-    total_time = fields.Integer(compute='_total_time', string=u'Затраченное время')
+    task_count = fields.Integer(compute='_task_count', string=u'Количество заданий')
+    planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов всего')
+    total_time = fields.Integer(compute='_time_count', string=u'Затраченно часов всего')
     reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
     reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
     reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
@@ -131,6 +171,22 @@ class Job(models.Model):
                               ('corrections', u'Коррекция'),
                               ('finished', u'Завершена'),
                               ], u'Статус', readonly=True, default='plan')
+    remaining_hours = fields.Boolean()
+    effective_hours = fields.Boolean()
+    total_hours = fields.Boolean()
+    progress = fields.Float(compute='_time_count', string=u'Прогресс')
+    delay_hours = fields.Boolean()
+    timesheet_ids = fields.Boolean()
+    analytic_account_id = fields.Boolean()
+
+    @api.one
+    @api.depends('task_ids')
+    def _time_count(self):
+        self.planned_hours = sum([r.planned_hours for r in self.task_ids])
+        self.total_time = sum([r.effective_hours for r in self.task_ids])
+        if self.total_time and self.planned_hours:
+            self.progress = round(min(100.0 * self.total_time / self.planned_hours, 99.99), 2)
+        return True
 
     @api.model
     def _store_history(self, ids):
@@ -139,10 +195,8 @@ class Job(models.Model):
         return True
 
     @api.model
-    def _total_time(self, ids):
-        if 1:
-            return False
-        return True
+    def _hours_get(self, ids):
+        return
 
 
 class Task(models.Model):
@@ -160,7 +214,7 @@ class Task(models.Model):
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
     project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True)
     required_result = fields.Text(u'Требуемый результат')
-    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Priority', select=True)
+    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
     user_executor_id = fields.Many2one('res.users', string=u'Исполнитель')
     user_predicator_id = fields.Many2one('res.users', string=u'Утверждающий')
     user_approver_id = fields.Many2one('res.users', string=u'Подтверждающий')

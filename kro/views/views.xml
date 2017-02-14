@@ -165,6 +165,14 @@
         <field name="model">kro.aim</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="planned_hours"/>
+                <field name="total_time"/>
+                <field name="progress" widget="progressbar"/>
+            </field>
+            <field name="planned_hours" position="replace">
+                <field name="planned_hours" invisible="1"/>
+            </field>
             <field name="name" position="replace">
             <field name="name" placeholder="Заголовок цели ..."/>
             </field>
@@ -309,6 +317,14 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="priority" eval="256" />
         <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="planned_hours"/>
+                <field name="total_time"/>
+                <field name="progress" widget="progressbar"/>
+            </field>
+            <field name="planned_hours" position="replace">
+                <field name="planned_hours" invisible="1"/>
+            </field>
             <field name="name" position="replace">
                 <field name="name" placeholder="Заголовок задачи ..."/>
             </field>
