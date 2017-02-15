@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+import datetime
+from datetime import date
 
 
 class Project(models.Model):
     _inherit = 'project.project'
-    problem_ids = fields.One2many('kro.problem', 'kro_project_id', ondelete="cascade",  string=u'Проблемы')
+    problem_ids = fields.One2many('kro.problem', 'kro_project_id', ondelete='set null',  string=u'Проблемы')
     use_tasks = fields.Boolean(default=False)
 
 
@@ -202,12 +204,20 @@ class Job(models.Model):
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
-    date_start_ex = fields.Datetime(u'Старт')
-    date_end_ex = fields.Datetime(u'Финиш')
-    date_start_pr = fields.Datetime(u'Старт')
-    date_end_pr = fields.Datetime(u'Финиш')
-    date_start_ap = fields.Datetime(u'Старт')
-    date_end_ap = fields.Datetime(u'Финиш')
+    # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
+    date_start = fields.Date()
+    date_end_ex = fields.Date(u'Финиш')
+    date_start_pr = fields.Date(u'Старт')
+    date_end_pr = fields.Date(u'Финиш')
+    date_start_ap = fields.Date(u'Старт')
+    # date_end_ap = fields.Datetime(u'Финиш') используем date_end для гантта
+    date_end = fields.Date()
+    plan_time_ex = fields.Float(u'План по времени исполнитель')
+    plan_time_pr = fields.Float(u'План по времени утверждающий')
+    plan_time_ap = fields.Float(u'План по времени подтверджающий')
+    amount = fields.Float(u'Бюджет')
+    mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса')
+    mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата')
     job_id = fields.Many2one('kro.job', string=u'Задача', readonly=True)
     aim_id = fields.Many2one('kro.aim', string=u'Цель', readonly=True)
     job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True)
@@ -232,3 +242,31 @@ class Task(models.Model):
                               ('finished', u'Завершено'),
                               ('correction', u'Коррекция'),
                               ], u'Статус',  default='plan')
+    planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов', readonly=True)
+    depend_on_ids = fields.Many2many('project.task', relation='depend_on_rel', column1='col_name1', column2='col_name2', string=u'Основание')
+    dependent_ids = fields.Many2many('project.task', relation='dependent_rel', column1='col_name3', column2='col_name4', string=u'Зависимые')
+
+    @api.one
+    @api.depends('plan_time_ex', 'plan_time_pr', 'plan_time_ap')
+    def _time_count(self):
+        self.planned_hours = self.plan_time_ex+self.plan_time_pr+self.plan_time_ap
+
+    @api.model
+    def action_move_time(self, active_id):
+        task = self.env['project.task'].browse(active_id)
+        start = datetime.datetime.strptime(task.date_start, '%Y-%m-%d')
+        end = datetime.datetime.strptime(task.date_end, '%Y-%m-%d')
+        for dep in task.dependent_ids:
+            r_start = datetime.datetime.strptime(dep.date_start, '%Y-%m-%d')
+            r_end = datetime.datetime.strptime(dep.date_end, '%Y-%m-%d')
+            r_diff = r_end - r_start
+            if r_start < end:
+                dep.date_start = task.date_end
+                dep.date_end = end + r_diff
+            if r_start > end:
+                dep.date_start = task.date_end
+                dep.date_end = end + r_diff
+        for base in task.depend_on_ids:
+            r_end = datetime.datetime.strptime(base.date_end, '%Y-%m-%d')
+            if r_end > start:
+                task.date_start = base.date_end

@@ -411,6 +411,14 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <xpath expr="//notebook/page[2]/group/field[@name='date_start']/.." position="replace">
+            </xpath>
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" type="object" name="action_move_time" icon="fa-clock-o" string="Пересчитать связанные"/>
+            </button>
+            <field name="date_deadline" position="replace">
+                <field name="date_deadline" invisible="1"/>
+            </field>
             <field name="name" position="replace">
                 <field name="name" placeholder="Заголовок задания ..."/>
             </field>
@@ -422,6 +430,11 @@
             <field name="user_id" position="replace">
                 <field name="user_id" string="Ответственный за планирование"/>
             </field>
+            <field name="partner_id" position="after">
+                <field name="amount"/>
+                <field name="mark_state"/>
+                <field name="mark_result"/>
+            </field>
             <field name="project_id" position="replace">
                 <field name="project_id" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
                 <field name="problem_id" context="{'form_view_ref': 'kro.view_kro_problem_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
@@ -429,6 +442,14 @@
                 <field name="job_aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)]}"/>
                 <field name="job_id" context="{'form_view_ref': 'kro.view_kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
             </field>
+            <page name="description_page" position='after'>
+                <page name="depend_on_ids" string='Опорные задания'>
+                    <field name="depend_on_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                </page>
+                <page name="dependent_ids" string='Зависимые задания'>
+                    <field name="dependent_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                </page>
+            </page>
             <notebook position="before">
                 <group col="3">
                     <group col="1">
@@ -443,11 +464,15 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Дата начала: </span>
-                            <field name="date_start_ex" nolabel="1"/>
+                            <field name="date_start"/>
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Дата завершения: </span>
                             <field name="date_end_ex" nolabel="1"/>
+                        </div>
+                        <div col="2">
+                            <span style="font-weight: bold;">Оценка времени: </span>
+                            <field name="plan_time_ex" nolabel="1"/>
                         </div>
                     </group>
                     <group col="1">
@@ -468,6 +493,10 @@
                             <span style="font-weight: bold;">Дата завершения: </span>
                             <field name="date_end_pr" nolabel="1"/>
                         </div>
+                        <div col="2">
+                            <span style="font-weight: bold;">Оценка времени: </span>
+                            <field name="plan_time_pr" nolabel="1"/>
+                        </div>
                     </group>
                     <group col="1">
                         <h3>Подтверждающий</h3>
@@ -485,7 +514,11 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Дата завершения: </span>
-                            <field name="date_end_ap" nolabel="1"/>
+                            <field name="date_end"/>
+                        </div>
+                        <div col="2">
+                            <span style="font-weight: bold;">Оценка времени: </span>
+                            <field name="plan_time_ap" nolabel="1"/>
                         </div>
                     </group>
                 </group>
@@ -509,7 +542,7 @@
     <record id="kro_action_view_task" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,gantt8</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="project.view_task_search_form"/>
         <field name="help" type="html">
