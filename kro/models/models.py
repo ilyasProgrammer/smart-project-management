@@ -16,22 +16,22 @@ class Problem(models.Model):
     _inherit = 'project.task'
 
     kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
-    date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False)
-    fact_date = fields.Date(u'Фактическая дата', select=True)
+    date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False, track_visibility='always')
+    fact_date = fields.Date(u'Фактическая дата', select=True, track_visibility='always')
     # user_id = fields.Many2one('res.users', 'Инициатор', select=True, track_visibility='onchange')
-    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
+    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
     user_aim_id = fields.Many2one('res.users', u'Ответственный за определение целей', select=True, track_visibility='onchange', ondelete='set null')
     # user_admin_id = fields.Many2one('res.users', u'Администратор', select=True, track_visibility='onchange')
     addressee_id = fields.Many2one('res.users', u'Адресат', select=True, track_visibility='onchange', ondelete='set null')
-    description = fields.Html(u'Формулировка проблемы')
-    effects = fields.Text(u'Последствия')
-    causes = fields.Text(u'Причины')
-    decision = fields.Text(u'Решение')
-    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
-    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
-    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
-    reason_correction = fields.Text(u'Причина коррекции')
-    aim_ids = fields.One2many('kro.aim', 'problem_id', ondelete="cascade", string=u'Цели')
+    description = fields.Html(u'Формулировка проблемы', track_visibility='always')
+    effects = fields.Text(u'Последствия', track_visibility='always')
+    causes = fields.Text(u'Причины', track_visibility='always')
+    decision = fields.Text(u'Решение', track_visibility='always')
+    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null', track_visibility='always')
+    reason_correction = fields.Text(u'Причина коррекции', track_visibility='always')
+    aim_ids = fields.One2many('kro.aim', 'problem_id', ondelete="cascade", string=u'Цели', track_visibility='always')
     # stage_id = fields.Many2one('project.task.type', u'Статус', track_visibility='onchange', select=True, domain="[('project_ids', '=', project_id)]", copy=False),
     state = fields.Selection([('plan', u'Планирование'),
                               ('moved', u'Передана'),
@@ -40,7 +40,7 @@ class Problem(models.Model):
                               ('suspended', u'Отложена'),
                               ('canceled', u'Отклонена'),
                               ('closed', u'Закрыта'),
-                              ], u'Статус',  default='plan')
+                              ], u'Статус',  default='plan', track_visibility='always')
     remaining_hours = fields.Boolean()
     effective_hours = fields.Boolean()
     total_hours = fields.Boolean()
@@ -67,20 +67,20 @@ class Aim(models.Model):
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null', readonly=True)
     project_id = fields.Many2one(related='problem_id.kro_project_id', readonly=True, string=u'Проект', ondelete='set null')
-    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
-    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
-    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
-    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
-    reason_correction = fields.Text(u'Причина коррекции')
+    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
+    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null', track_visibility='always')
+    reason_correction = fields.Text(u'Причина коррекции', track_visibility='always')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
-    job_ids = fields.One2many('kro.job', 'aim_id', ondelete="cascade", string=u'Задачи')
-    task_ids = fields.One2many('project.task', 'aim_id', ondelete="cascade", string=u'Задания')
+    job_ids = fields.One2many('kro.job', 'aim_id', ondelete="cascade", string=u'Задачи', track_visibility='always')
+    task_ids = fields.One2many('project.task', 'aim_id', ondelete="cascade", string=u'Задания', track_visibility='always')
     task_count = fields.Integer(compute='_task_count')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
                               ('corrections', u'Коррекция'),
                               ('finished', u'Завершена'),
-                              ], u'Статус', readonly=True, default='plan')
+                              ], u'Статус', readonly=True, default='plan', track_visibility='always')
     remaining_hours = fields.Boolean()
     effective_hours = fields.Boolean()
     total_hours = fields.Boolean()
@@ -164,25 +164,25 @@ class Job(models.Model):
     _description = u'Задача'
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
-    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
-    aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', readonly=True)
+    priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
+    aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', readonly=True, track_visibility='always')
     problem_id = fields.Many2one(related='aim_id.problem_id', string=u'Проблема', readonly=True, ondelete="set null")
     project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', readonly=True, ondelete='set null')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
-    task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания')
+    task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания', track_visibility='always')
     task_count = fields.Integer(compute='_task_count', string=u'Количество заданий')
     planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов всего')
     total_time = fields.Integer(compute='_time_count', string=u'Затраченно часов всего')
-    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null')
-    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null')
-    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null')
-    reason_correction = fields.Text(u'Причина коррекции')
+    reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null', track_visibility='always')
+    reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null', track_visibility='always')
+    reason_correction = fields.Text(u'Причина коррекции', track_visibility='always')
     state = fields.Selection([('plan', u'Планирование'),
                               ('defined', u'Определена'),
                               ('suspended', u'Отложена'),
                               ('corrections', u'Коррекция'),
                               ('finished', u'Завершена'),
-                              ], u'Статус', readonly=True, default='plan')
+                              ], u'Статус', readonly=True, default='plan', track_visibility='always')
     remaining_hours = fields.Boolean()
     effective_hours = fields.Boolean()
     total_hours = fields.Boolean()
