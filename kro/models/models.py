@@ -152,8 +152,8 @@ class Job(models.Model):
     _name = 'kro.job'
     _inherit = 'project.task'
     _description = u'Задача'
-    date_start = fields.Datetime(u'Дата начала')
-    date_end = fields.Datetime(u'Дата завершения')
+    date_start = fields.Date(string=u'Дата начала')
+    date_end = fields.Date(string=u'Дата завершения')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True)
     aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', readonly=True)
     problem_id = fields.Many2one(related='aim_id.problem_id', string=u'Проблема', readonly=True)
@@ -184,11 +184,17 @@ class Job(models.Model):
     @api.one
     @api.depends('task_ids')
     def _time_count(self):
-        self.planned_hours = sum([r.planned_hours for r in self.task_ids])
-        self.total_time = sum([r.effective_hours for r in self.task_ids])
-        if self.total_time and self.planned_hours:
-            self.progress = round(min(100.0 * self.total_time / self.planned_hours, 99.99), 2)
-        return True
+        if len(self.task_ids):
+            self.planned_hours = sum([r.planned_hours for r in self.task_ids])
+            self.total_time = sum([r.effective_hours for r in self.task_ids])
+            start_dates = [datetime.datetime.strptime(r.date_start, '%Y-%m-%d') for r in self.task_ids if r.date_start is not False]
+            end_dates = [datetime.datetime.strptime(r.date_end, '%Y-%m-%d') for r in self.task_ids if r.date_end is not False]
+            if len(start_dates):
+                self.date_start = min(start_dates)
+            if len(end_dates):
+                self.date_end = max(end_dates)
+            if self.total_time and self.planned_hours:
+                self.progress = round(min(100.0 * self.total_time / self.planned_hours, 99.99), 2)
 
     @api.model
     def _store_history(self, ids):
@@ -210,8 +216,8 @@ class Task(models.Model):
     date_start_pr = fields.Date(u'Старт')
     date_end_pr = fields.Date(u'Финиш')
     date_start_ap = fields.Date(u'Старт')
-    # date_end_ap = fields.Datetime(u'Финиш') используем date_end для гантта
-    date_end = fields.Date()
+    date_end_ap = fields.Date(u'Финиш')
+    date_end = fields.Date(compute='_set_date_end')
     plan_time_ex = fields.Float(u'План по времени исполнитель')
     plan_time_pr = fields.Float(u'План по времени утверждающий')
     plan_time_ap = fields.Float(u'План по времени подтверджающий')
@@ -271,3 +277,13 @@ class Task(models.Model):
             r_end = datetime.datetime.strptime(base.date_end, '%Y-%m-%d')
             if r_end > start:
                 task.date_start = base.date_end
+
+    @api.one
+    @api.depends('date_end_ap', 'date_end_pr')
+    def _set_date_end(self):
+        end_date_ap = int(self.date_end_ap.replace('-', '')) if self.date_end_ap else 0
+        end_date_pr = int(self.date_end_pr.replace('-', '')) if self.date_end_pr else 0
+        if end_date_ap > end_date_pr:
+            self.date_end = self.date_end_ap
+        elif end_date_ap < end_date_pr:
+            self.date_end = self.date_end_pr
