@@ -215,6 +215,7 @@ class Task(models.Model):
     plan_time_ex = fields.Float(u'План по времени исполнитель')
     plan_time_pr = fields.Float(u'План по времени утверждающий')
     plan_time_ap = fields.Float(u'План по времени подтверджающий')
+    got_approver = fields.Boolean(u'С подтверждающим')
     amount = fields.Float(u'Бюджет')
     mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса')
     mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата')

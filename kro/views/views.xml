@@ -411,6 +411,9 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="planned_hours" position="after">
+                <field name="got_approver"/>
+            </field>
             <xpath expr="//notebook/page[2]/group/field[@name='date_start']/.." position="replace">
             </xpath>
             <button name="toggle_active" position="before">
@@ -443,10 +446,10 @@
                 <field name="job_id" context="{'form_view_ref': 'kro.view_kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
             </field>
             <page name="description_page" position='after'>
-                <page name="depend_on_ids" string='Опорные задания'>
+                <page name="depend_on_ids" string='Блокирующие задания'>
                     <field name="depend_on_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
                 </page>
-                <page name="dependent_ids" string='Зависимые задания'>
+                <page name="dependent_ids" string='Блокируемые задания'>
                     <field name="dependent_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
                 </page>
             </page>
@@ -491,14 +494,15 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Дата завершения: </span>
-                            <field name="date_end_pr" nolabel="1"/>
+                            <field name="date_end_pr" nolabel="1" attrs="{'invisible': [('got_approver', '=', False)]}"/>
+                            <field name="date_end" attrs="{'invisible': [('got_approver', '=', True)]}"/>
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Оценка времени: </span>
                             <field name="plan_time_pr" nolabel="1"/>
                         </div>
                     </group>
-                    <group col="1">
+                    <group col="1" attrs="{'invisible': [('got_approver', '=', False)]}">
                         <h3>Подтверждающий</h3>
                         <hr style="margin-top: 0;margin-bottom: 0;"/>
                         <div col="2">
