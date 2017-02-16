@@ -189,8 +189,8 @@
                 <field name="date_deadline" invisible="1"/>
             </field>
             <field name="date_deadline" position="before">
-                <field name="date_start"/>
-                <field name="date_end"/>
+                <field name="date_start" readonly="1"/>
+                <field name="date_end" readonly="1"/>
             </field>
             <field name="sequence" position="before">
                 <field name="create_date" string="Дата регистрации"/>
@@ -202,10 +202,24 @@
             </field>
             <page name="description_page" position="before">
                 <page string="Задачи">
-                    <field name="job_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_job_form'}"/>
+                    <field name="job_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_job_form'}">
+                        <tree string="Задачи">
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </tree>
+                    </field>
                 </page>
                 <page string="Задания">
-                    <field name="task_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                    <field name="task_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}">
+                        <tree string="Задания">
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </tree>
+                    </field>
                 </page>
             </page>
             <field name="user_id" position="replace">
