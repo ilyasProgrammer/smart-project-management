@@ -118,7 +118,7 @@ class Aim(models.Model):
     @api.model
     def action_tasks(self, active_id):
         search_view = self.env['ir.model.data'].get_object_reference('kro', 'kro_aim_all_tasks')
-        view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_aim_task_search_form')
+        view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_aims_task_search_form')
         aim = self.env['kro.aim'].browse(active_id)
         job_tasks_ids = []
         for r in aim.job_ids:
@@ -127,7 +127,7 @@ class Aim(models.Model):
         value = {
             'domain': [('id', 'in', [rec.id for rec in aim.task_ids]+job_tasks_ids)],
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'search,tree,form',
             'res_model': 'project.task',
             'res_id': False,
             'view_id': False,

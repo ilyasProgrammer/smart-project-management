@@ -287,41 +287,30 @@
             </gantt8>
         </field>
     </record>
-    <record id="kro_aim_task_search_form" model="ir.ui.view">
+    <record id="kro_aims_task_search_form" model="ir.ui.view">
         <field name="name">project.task.search.form</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_search_form"/>
         <field name="arch" type="xml">
-            <search position="replace">
-                <search string="Задачи">
-                    <field name="stage_id"/>
-                    <field name="id"/>
-                    <field name="name"/>
-                    <field name="tag_ids"/>
-                    <field name="partner_id"/>
-                    <field name="project_id"/>
-                    <field name="user_id"/>
-                    <group expand="1" string="Group By">
-                        <filter string="По задачам" name="job_id" context="{'group_by':'job_id'}"/>
-                    </group>
-                </search>
+            <search string="Tasks">
+                <field name="stage_id"/>
+                <field name="stage_id"/>
+                <field name="id"/>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="По задачам" name="job_id" context="{'group_by':'job_id'}"/>
+                </group>
             </search>
         </field>
     </record>
-    <record id="kro_aim_all_tasks" model="ir.actions.act_window">
-        <field name="name">Tasks</field>
-        <field name="res_model">project.task</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-        <!--<field name="domain">[('id', 'in',  task_ids[0][2])]</field>-->
-        <field name="search_view_id" ref="kro_aim_task_search_form"/>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Here, you can create new tasks
-            </p>
-            <p>
-                You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
-            </p>
-        </field>
+    <record id="kro_aim_all_tasks" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="kro_aims_task_search_form"/>
     </record>
     <record id="action_aims" model="ir.actions.act_window">
         <field name="name">Цели</field>
@@ -592,12 +581,13 @@
             <tree position="replace">
                 <tree>
                     <field name="code" string="Номер"/>
-                    <field name="name" string="Название"/>
+                    <field name="job_id" string="Задача"/>
+                    <field name="name" string="Задание"/>
                     <field name="state"/>
-                    <field name="project_id"/>
-                    <field name="problem_id"/>
-                    <field name="aim_id"/>
-                    <field name="user_id"/>
+                    <field name="user_id" string="Ответственный"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="progress"/>
                 </tree>
             </tree>
         </field>
