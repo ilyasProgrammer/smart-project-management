@@ -173,6 +173,7 @@
     <record id="view_kro_aim_form" model="ir.ui.view">
         <field name="name">kro.aim.form</field>
         <field name="model">kro.aim</field>
+        <field name="priority" eval="256" />
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="after">

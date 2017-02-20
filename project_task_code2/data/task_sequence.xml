@@ -5,7 +5,7 @@
             <field name="name">Task code</field>
             <field name="code">project.task</field>
             <field eval="4" name="padding" />
-            <field name="prefix">T</field>
+            <field name="prefix"></field>
         </record>
 
 </odoo>

@@ -5,6 +5,7 @@
             <field name="name">project.task.code.form</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
                     <field name="code" class="oe_inline" />
