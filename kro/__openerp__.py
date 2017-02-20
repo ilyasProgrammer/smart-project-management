@@ -12,7 +12,6 @@
         'reminder_task_deadline',
         'project_gantt8',
         'project_timesheet',
-        'project_task_code2',
                 ],
     'data': [
         'security/ir.model.access.csv',
