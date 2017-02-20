@@ -2,7 +2,6 @@
 
 from openerp import models, fields, api
 import datetime
-from datetime import date
 
 
 class Project(models.Model):
@@ -220,6 +219,7 @@ class Job(models.Model):
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
+    _order = 'code'
     # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
     date_start = fields.Date(u'Исполнитель дата начала', track_visibility='always')
     date_end_ex = fields.Date(u'Исполнитель дата окончания', track_visibility='onchange')

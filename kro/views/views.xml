@@ -582,6 +582,24 @@
             </field>
         </field>
     </record>
+    <record id="view_task_tree" model="ir.ui.view">
+        <field name="name">project.task.tree</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <tree position="replace">
+                <tree>
+                    <field name="code" string="Номер"/>
+                    <field name="name" string="Название"/>
+                    <field name="state"/>
+                    <field name="project_id"/>
+                    <field name="problem_id"/>
+                    <field name="aim_id"/>
+                    <field name="user_id"/>
+                </tree>
+            </tree>
+        </field>
+    </record>
     <record id="view_task_kanban" model="ir.ui.view">
         <field name="name">project.task.kanban</field>
         <field name="model">project.task</field>
@@ -605,7 +623,7 @@
     <record id="kro_action_view_task" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">kanban,tree,form,calendar,pivot,graph,gantt8</field>
+        <field name="view_mode">tree,form,kanban,calendar,pivot,graph,gantt8</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="project.view_task_search_form"/>
         <field name="help" type="html">
@@ -653,6 +671,11 @@
                 <field name="expectations"/>
             </field>
         </field>
+    </record>
+    <record id="action_task_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_task_tree"/>
     </record>
     <!--МЕНЮ-->
     <menuitem action="action_projects" id="project_list" name="Проекты" parent="kro_proj_menu" sequence="1"/>
