@@ -62,6 +62,7 @@ class Problem(models.Model):
 class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
+    _order = 'code'
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null', readonly=True)
@@ -161,6 +162,7 @@ class Job(models.Model):
     _name = 'kro.job'
     _inherit = 'project.task'
     _description = u'Задача'
+    _order = 'code'
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')

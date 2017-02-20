@@ -249,6 +249,7 @@
         <field name="model">kro.aim</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="code" string="Номер"/>
                 <field name="name" string="Название"/>
                 <field name="state"/>
                 <field name="problem_id"/>
@@ -402,6 +403,7 @@
         <field name="model">kro.job</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="code" string="Номер"/>
                 <field name="name" string="Название"/>
                 <field name="state"/>
                 <field name="project_id"/>
@@ -612,11 +614,12 @@
             </gantt8>
         </field>
     </record>
-    <record id="kro_action_view_task" model="ir.actions.act_window">
+    <record id="kro_actions_view_task" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">tree,form,kanban,calendar,pivot,graph,gantt8</field>
         <field name="context">{}</field>
+        <field name="view_id" ref="view_task_tree"/>
         <field name="search_view_id" ref="project.view_task_search_form"/>
         <field name="help" type="html">
             <p>
@@ -674,7 +677,7 @@
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_action_view_task" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
+    <menuitem action="kro_actions_view_task" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>
 
 </data>
 </openerp>
