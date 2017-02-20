@@ -492,7 +492,8 @@
             <field name="project_id" position="replace">
                 <field name="project_id" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
                 <field name="problem_id" context="{'form_view_ref': 'kro.view_kro_problem_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
-                <field name="aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>
+                <!--<field name="aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>-->
+                <field name="aim_id"/>
                 <field name="job_aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)]}"/>
                 <field name="job_id" context="{'form_view_ref': 'kro.view_kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
             </field>
