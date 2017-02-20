@@ -9,7 +9,7 @@ class ProjectTask(models.Model):
     _inherit = 'project.task'
 
     code = fields.Char(
-        string='Task Number', required=True, default="/", readonly=True)
+        string='Task Number', required=True, default="/")
 
     _sql_constraints = [
         ('project_task_unique_code', 'UNIQUE (code)',
