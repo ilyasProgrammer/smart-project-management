@@ -8,6 +8,7 @@
             <field name="priority" eval="2" />
             <field name="arch" type="xml">
                 <field name="name" position="before">
+                    <label string="Задание № " class="oe_inline" />
                     <field name="code" class="oe_inline" />
                     <label string=" - " class="oe_inline" />
                 </field>
