@@ -185,7 +185,10 @@
                 <field name="planned_hours" invisible="1"/>
             </field>
             <field name="name" position="replace">
-            <field name="name" placeholder="Заголовок цели ..."/>
+                <label string="Цель № " class="oe_inline"/>
+                <field name="code" class="oe_inline"/>
+                <label string=" - " class="oe_inline"/>
+                <field name="name" placeholder="Заголовок цели ..."/>
             </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" type="object" name="action_tasks" icon="fa-tasks" context="{'task_ids': task_ids}">
@@ -351,6 +354,9 @@
                 <field name="planned_hours" invisible="1"/>
             </field>
             <field name="name" position="replace">
+                <label string="Задача № " class="oe_inline"/>
+                <field name="code" class="oe_inline"/>
+                <label string=" - " class="oe_inline"/>
                 <field name="name" placeholder="Заголовок задачи ..."/>
             </field>
             <page name='description_page' position="after">
