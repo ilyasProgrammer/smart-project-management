@@ -252,7 +252,7 @@
         <field name="model">kro.aim</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="code" string="Номер"/>
+                <field name="code"/>
                 <field name="name" string="Название"/>
                 <field name="state"/>
                 <field name="problem_id"/>
@@ -410,7 +410,7 @@
         <field name="model">kro.job</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="code" string="Номер"/>
+                <field name="code"/>
                 <field name="name" string="Название"/>
                 <field name="state"/>
                 <field name="project_id"/>
@@ -589,7 +589,6 @@
         <field name="arch" type="xml">
             <tree position="replace">
                 <tree string="Задания">
-                    <field name="code" string="Номер"/>
                     <field name="job_id" string="Задача"/>
                     <field name="name" string="Задание"/>
                     <field name="state"/>

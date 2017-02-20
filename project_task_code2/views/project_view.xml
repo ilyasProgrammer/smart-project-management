@@ -26,6 +26,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="project_task_code_tree_view">
+            <field name="name">project.task.code.tree</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="kro.view_task_tree" />
+            <field name="arch" type="xml">
+                <field name="job_id" position="before">
+                    <field name="code" />
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="project_task_code_kanban_view">
             <field name="name">project.task.code.kanban</field>
             <field name="model">project.task</field>

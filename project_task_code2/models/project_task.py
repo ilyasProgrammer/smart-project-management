@@ -8,8 +8,7 @@ from openerp import api, fields, models, _
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
-    code = fields.Char(
-        string='Task Number', required=True, default="/")
+    code = fields.Char(string=u'Номер', required=True, default="/")
 
     _sql_constraints = [
         ('project_task_unique_code', 'UNIQUE (code)',
@@ -28,3 +27,4 @@ class ProjectTask(models.Model):
             default = {}
         default['code'] = self.env['ir.sequence'].next_by_code('project.task')
         return super(ProjectTask, self).copy(default)
+

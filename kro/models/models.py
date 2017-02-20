@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 import datetime
 
 
@@ -13,7 +13,7 @@ class Project(models.Model):
 class Problem(models.Model):
     _name = 'kro.problem'
     _inherit = 'project.task'
-
+    name = fields.Char(string=u'Наименование',track_visibility='onchange', size=128, required=True, select=True)
     kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
     date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False, track_visibility='always')
     fact_date = fields.Date(u'Фактическая дата', select=True, track_visibility='always')
@@ -63,6 +63,7 @@ class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
     _order = 'code'
+    code = fields.Char(string=u'Номер', required=True, default="/")
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null', readonly=True)
@@ -90,6 +91,10 @@ class Aim(models.Model):
     delay_hours = fields.Boolean()
     timesheet_ids = fields.Boolean()
     analytic_account_id = fields.Boolean()
+    _sql_constraints = [
+        ('kro_aim_unique_code', 'UNIQUE (code)',
+         _('The code must be unique!')),
+    ]
 
     @api.one
     @api.depends('job_ids', 'task_ids')
@@ -157,12 +162,26 @@ class Aim(models.Model):
     def _hours_get(self, ids):
         return
 
+    @api.model
+    def create(self, vals):
+        if vals.get('code', '/') == '/':
+            vals['code'] = self.env['ir.sequence'].next_by_code('kro.aim')
+        return super(Aim, self).create(vals)
+
+    @api.one
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        default['code'] = self.env['ir.sequence'].next_by_code('kro.aim')
+        return super(Aim, self).copy(default)
+
 
 class Job(models.Model):
     _name = 'kro.job'
     _inherit = 'project.task'
     _description = u'Задача'
     _order = 'code'
+    code = fields.Char(string=u'Номер', required=True, default="/")
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
@@ -191,6 +210,10 @@ class Job(models.Model):
     delay_hours = fields.Boolean()
     timesheet_ids = fields.Boolean()
     analytic_account_id = fields.Boolean()
+    _sql_constraints = [
+        ('kro_job_unique_code', 'UNIQUE (code)',
+         _('The code must be unique!')),
+    ]
 
     @api.one
     @api.depends('task_ids')
@@ -217,11 +240,23 @@ class Job(models.Model):
     def _hours_get(self, ids):
         return
 
+    @api.model
+    def create(self, vals):
+        if vals.get('code', '/') == '/':
+            vals['code'] = self.env['ir.sequence'].next_by_code('kro.job')
+        return super(Job, self).create(vals)
+
+    @api.one
+    def copy(self, default=None):
+        if default is None:
+            default = {}
+        default['code'] = self.env['ir.sequence'].next_by_code('kro.job')
+        return super(Job, self).copy(default)
+
 
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
-    _order = 'code'
     # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
     date_start = fields.Date(u'Исполнитель дата начала', track_visibility='always')
     date_end_ex = fields.Date(u'Исполнитель дата окончания', track_visibility='onchange')

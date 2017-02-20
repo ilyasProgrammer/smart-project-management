@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "Sequential Code for Tasks2",
+    "name": "KRO Sequential Code for Tasks",
     "version": "9.0.1.0.0",
     "category": "Project Management",
     "author": "OdooMRP team, "
@@ -20,12 +20,14 @@
     ],
     "depends": [
         "project",
+        "kro",
     ],
     "data": [
         "data/task_sequence.xml",
         "views/project_view.xml",
     ],
     'installable': True,
+    'application': True,
     "pre_init_hook": "create_code_equal_to_id",
     "post_init_hook": "assign_old_sequences",
 }
