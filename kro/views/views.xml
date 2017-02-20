@@ -320,6 +320,7 @@
         <field name="name">Цели</field>
         <field name="res_model">kro.aim</field>
         <field name="view_mode">tree,form,calendar,gantt8</field>
+        <field name="view_id" ref="kro_aims_tree"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую цель.
