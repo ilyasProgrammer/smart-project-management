@@ -620,7 +620,7 @@
             </gantt8>
         </field>
     </record>
-    <record id="kro_actions_view_taskss22" model="ir.actions.act_window">
+    <record id="kro_actions_view_taskss" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">gantt8,form,calendar,pivot,graph,tree</field>
@@ -681,7 +681,7 @@
         <field name="sequence" eval="1"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="kro_task_gantt"/>
-        <field name="act_window_id" ref="kro_actions_view_taskss22"/>
+        <field name="act_window_id" ref="kro_actions_view_taskss"/>
     </record>
     <!--ПРЯЧЕМ МЕНЮ-->
     <record id="make_invisible" model="res.groups">
@@ -703,11 +703,11 @@
         <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <!--МЕНЮ-->
-    <menuitem action="action_projects" id="project_list" name="Проекты" parent="kro_proj_menu" sequence="1"/>
-    <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
-    <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
-    <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_actions_view_taskss22" string="Задания22" name="Задания22" parent="kro_proj_menu" sequence="7"/>
+    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1"/>
+    <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
+    <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3"/>
+    <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4"/>
+    <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="7"/>
 
 </data>
 </openerp>
