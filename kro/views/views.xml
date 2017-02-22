@@ -688,26 +688,26 @@
         <field name="name">Invisible</field>
     </record>
     <record model="ir.ui.menu" id="project.menu_tasks_config">
-        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <record model="ir.ui.menu" id="project.menu_project_management">
-        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <record model="ir.ui.menu" id="project.menu_project_tags_act">
-        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <record model="ir.ui.menu" id="project.menu_projects_config">
-        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <record model="ir.ui.menu" id="project.menu_projects">
-        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+        <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <!--МЕНЮ-->
     <menuitem action="action_projects" id="project_list" name="Проекты" parent="kro_proj_menu" sequence="1"/>
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>
+    <!--<menuitem action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>-->
 
 </data>
 </openerp>
