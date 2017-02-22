@@ -147,7 +147,7 @@
     <record id="action_problems" model="ir.actions.act_window">
         <field name="name">Проблемы</field>
         <field name="res_model">kro.problem</field>
-        <field name="view_mode">tree,form,calendar,gantt8</field>
+        <field name="view_mode">tree,calendar,form,gantt8</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую проблему.
@@ -319,7 +319,7 @@
     <record id="action_aims" model="ir.actions.act_window">
         <field name="name">Цели</field>
         <field name="res_model">kro.aim</field>
-        <field name="view_mode">tree,form,calendar,gantt8</field>
+        <field name="view_mode">tree,calendar,form,gantt8</field>
         <field name="view_id" ref="kro_aims_tree"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -620,13 +620,12 @@
             </gantt8>
         </field>
     </record>
-    <record id="kro_actions_view_task" model="ir.actions.act_window">
+    <record id="kro_actions_view_tasks" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,form,kanban,calendar,pivot,graph,gantt8</field>
-        <field name="context">{}</field>
-        <field name="view_id" ref="view_task_tree"/>
-        <field name="search_view_id" ref="project.view_task_search_form"/>
+        <field name="view_mode">gantt8,form,calendar,pivot,graph,tree</field>
+        <field name="view_id" ref="kro_task_gantt"/>
+        <field name="search_view_id" ref="view_task_tree"/>
         <field name="help" type="html">
             <p>
                 Задания
@@ -678,12 +677,37 @@
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_task_tree"/>
     </record>
+    <record id="action_task_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="kro_task_gantt"/>
+        <field name="act_window_id" ref="kro_actions_view_tasks"/>
+    </record>
+    <!--ПРЯЧЕМ МЕНЮ-->
+    <record id="make_invisible" model="res.groups">
+        <field name="name">Invisible</field>
+    </record>
+    <record model="ir.ui.menu" id="project.menu_tasks_config">
+        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+    </record>
+    <record model="ir.ui.menu" id="project.menu_project_management">
+        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+    </record>
+    <record model="ir.ui.menu" id="project.menu_project_tags_act">
+        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+    </record>
+    <record model="ir.ui.menu" id="project.menu_projects_config">
+        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+    </record>
+    <record model="ir.ui.menu" id="project.menu_projects">
+        <field name="groups" eval="[(6,0,[ref('kro.make_invisible')])]"/>
+    </record>
     <!--МЕНЮ-->
     <menuitem action="action_projects" id="project_list" name="Проекты" parent="kro_proj_menu" sequence="1"/>
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_actions_view_task" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>
+    <menuitem action="kro_actions_view_tasks" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>
 
 </data>
 </openerp>

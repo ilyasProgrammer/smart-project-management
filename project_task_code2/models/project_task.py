@@ -7,7 +7,7 @@ from openerp import api, fields, models, _
 
 class ProjectTask(models.Model):
     _inherit = 'project.task'
-
+    _order = 'code'
     code = fields.Char(string=u'Номер', required=True, default="/")
 
     _sql_constraints = [

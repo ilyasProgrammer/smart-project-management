@@ -272,7 +272,7 @@ class Task(models.Model):
     amount = fields.Float(u'Бюджет', track_visibility='onchange')
     mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса', track_visibility='onchange')
     mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
-    job_id = fields.Many2one('kro.job', string=u'Задача', readonly=True, ondelete="set null")
+    job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null")
     aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null")
     job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True)
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
