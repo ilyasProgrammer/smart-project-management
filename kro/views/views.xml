@@ -611,18 +611,14 @@
                 <field name="project_id"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
-                <filter string="Мои задачи" domain="['|','|','|',('user_id','=',uid),('user_executor_id','=',uid),('user_predicator_id','=',uid),('user_approver_id','=',uid)]"/>
+                <filter string="Мои задачи" name="my_tasks" domain="['|','|','|',('user_id','=',uid),('user_executor_id','=',uid),('user_predicator_id','=',uid),('user_approver_id','=',uid)]"/>
                 <filter string="Не назначены" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Новые" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                 <filter string="Архив" name="inactive" domain="[('active','=',False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                    <filter string="Task" context="{'group_by':'name'}"/>
-                    <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
-                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator/>
-                    <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                    <filter string="Проект" name="project" context="{'group_by':'project_id'}"/>
+                    <filter string="Задача" context="{'group_by':'job_id'}"/>
+                    <filter string="Статус" name="Stage" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>
@@ -711,18 +707,18 @@
         <field name="act_window_id" ref="kro_actions_view_taskss"/>
     </record>
     <!---->
-    <record id="viewasdfasd" model="ir.ui.view">
-        <field name="name">document.page.form.inherit</field>
-        <field name="model">document.page</field>
-        <field name="inherit_id" ref="document_page.view_wiki_form"/>
-        <field name="priority" eval="256" />
-        <field name="arch" type="xml">
-            <field name="content" position="after">
-                <iframe src="https://ya.ru/" width="50%" height="50%">
-                </iframe>
-            </field>
-        </field>
-    </record>
+    <!--<record id="viewasdfasd" model="ir.ui.view">-->
+        <!--<field name="name">document.page.form.inherit</field>-->
+        <!--<field name="model">document.page</field>-->
+        <!--<field name="inherit_id" ref="document_page.view_wiki_form"/>-->
+        <!--<field name="priority" eval="256" />-->
+        <!--<field name="arch" type="xml">-->
+            <!--<field name="content" position="after">-->
+                <!--<iframe src="https://ya.ru/" width="50%" height="50%">-->
+                <!--</iframe>-->
+            <!--</field>-->
+        <!--</field>-->
+    <!--</record>-->
     <!--ПРЯЧЕМ МЕНЮ-->
     <record id="make_invisible" model="res.groups">
         <field name="name">Invisible</field>
@@ -743,10 +739,10 @@
         <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <!--МЕНЮ-->
-    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1"/>
-    <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
-    <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3"/>
-    <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4"/>
+    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1" groups="project.group_project_manager"/>
+    <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2" groups="project.group_project_manager"/>
+    <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3" groups="project.group_project_manager"/>
+    <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager"/>
     <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
 
 </data>
