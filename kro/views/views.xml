@@ -600,16 +600,16 @@
             </tree>
         </field>
     </record>
-    <record id="view_task_kanban" model="ir.ui.view">
-        <field name="name">project.task.kanban</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_kanban"/>
-        <field name="arch" type="xml">
-            <kanban default_group_by="stage_id" position="attributes">
-                <attribute name="default_group_by">state</attribute>
-            </kanban>
-        </field>
-    </record>
+    <!--<record id="view_task_kanban" model="ir.ui.view">-->
+        <!--<field name="name">project.task.kanban</field>-->
+        <!--<field name="model">project.task</field>-->
+        <!--<field name="inherit_id" ref="project.view_task_kanban"/>-->
+        <!--<field name="arch" type="xml">-->
+            <!--<kanban default_group_by="stage_id" position="attributes">-->
+                <!--<attribute name="default_group_by">state</attribute>-->
+            <!--</kanban>-->
+        <!--</field>-->
+    <!--</record>-->
     <record id="kro_task_gantt" model="ir.ui.view">
         <field name="name">kro.job.gantt</field>
         <field name="model">project.task</field>
@@ -620,7 +620,7 @@
             </gantt8>
         </field>
     </record>
-    <record id="kro_actions_view_taskss" model="ir.actions.act_window">
+    <record id="kro_actions_view_taskss22" model="ir.actions.act_window">
         <field name="name">Задания</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">gantt8,form,calendar,pivot,graph,tree</field>
@@ -681,7 +681,7 @@
         <field name="sequence" eval="1"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="kro_task_gantt"/>
-        <field name="act_window_id" ref="kro_actions_view_taskss"/>
+        <field name="act_window_id" ref="kro_actions_view_taskss22"/>
     </record>
     <!--ПРЯЧЕМ МЕНЮ-->
     <record id="make_invisible" model="res.groups">
@@ -707,7 +707,7 @@
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="6"/>
+    <menuitem action="kro_actions_view_taskss22" string="Задания22" name="Задания" parent="kro_proj_menu" sequence="6"/>
 
 </data>
 </openerp>
