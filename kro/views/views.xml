@@ -525,7 +525,7 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Оценка времени: </span>
-                            <field name="plan_time_ex" nolabel="1"/>
+                            <field name="plan_time_ex" nolabel="1" widget="float_time"/>
                         </div>
                     </group>
                     <group col="1">
@@ -548,7 +548,7 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Оценка времени: </span>
-                            <field name="plan_time_pr" nolabel="1"/>
+                            <field name="plan_time_pr" nolabel="1" widget="float_time"/>
                         </div>
                     </group>
                     <group col="1" attrs="{'invisible': [('got_approver', '=', False)]}">
@@ -571,7 +571,7 @@
                         </div>
                         <div col="2">
                             <span style="font-weight: bold;">Оценка времени: </span>
-                            <field name="plan_time_ap" nolabel="1"/>
+                            <field name="plan_time_ap" nolabel="1" widget="float_time"/>
                         </div>
                     </group>
                 </group>
@@ -683,6 +683,19 @@
         <field name="view_id" ref="kro_task_gantt"/>
         <field name="act_window_id" ref="kro_actions_view_taskss"/>
     </record>
+    <!---->
+    <record id="viewasdfasd" model="ir.ui.view">
+        <field name="name">document.page.form.inherit</field>
+        <field name="model">document.page</field>
+        <field name="inherit_id" ref="document_page.view_wiki_form"/>
+        <field name="priority" eval="256" />
+        <field name="arch" type="xml">
+            <field name="content" position="after">
+                <iframe src="https://ya.ru/" width="50%" height="50%">
+                </iframe>
+            </field>
+        </field>
+    </record>
     <!--ПРЯЧЕМ МЕНЮ-->
     <record id="make_invisible" model="res.groups">
         <field name="name">Invisible</field>
@@ -707,7 +720,7 @@
     <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="7"/>
+    <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
 
 </data>
 </openerp>
