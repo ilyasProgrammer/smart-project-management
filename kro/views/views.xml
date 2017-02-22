@@ -707,7 +707,7 @@
     <menuitem action="action_problems" id="problems_list" name="Проблемы" parent="kro_proj_menu" sequence="2"/>
     <menuitem action="action_aims" id="aims_list" name="Цели" parent="kro_proj_menu" sequence="3"/>
     <menuitem action="action_job" id="job_list" name="Задачи" parent="kro_proj_menu" sequence="4"/>
-    <menuitem action="kro_actions_view_taskss22" string="Задания22" name="Задания" parent="kro_proj_menu" sequence="6"/>
+    <menuitem action="kro_actions_view_taskss22" string="Задания22" name="Задания22" parent="kro_proj_menu" sequence="7"/>
 
 </data>
 </openerp>
