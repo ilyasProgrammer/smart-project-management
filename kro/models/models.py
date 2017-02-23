@@ -274,7 +274,7 @@ class Task(models.Model):
     mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
     job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null")
     aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null")
-    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True)
+    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель задачи', readonly=True)
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
     project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True)
     required_result = fields.Text(u'Требуемый результат', track_visibility='onchange')
