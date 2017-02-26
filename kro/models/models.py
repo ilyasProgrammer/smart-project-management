@@ -347,13 +347,14 @@ class Task(models.Model):
         executor = self.env['res.users'].browse(vals['user_executor_id'])
         approver = self.env['res.users'].browse(vals['user_approver_id'])
         predicator = self.env['res.users'].browse(vals['user_predicator_id'])
+        user = self.env['res.users'].browse(vals['user_id'])
         if executor.partner_id or approver.partner_id or predicator.partner_id:
             vals['message_follower_ids'] = []
-            if executor.partner_id:
+            if executor != user and executor.partner_id:
                 vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {executor.partner_id.id: None}, {}, force=True)[0]
-            if approver.partner_id:
+            if approver != user and approver.partner_id:
                 vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {approver.partner_id.id: None}, {}, force=True)[0]
-            if predicator.partner_id:
+            if predicator != user and predicator.partner_id:
                 vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
             vals['message_follower_ids'] = make_unique(vals['message_follower_ids'])
         return super(Task, self).create(vals)
