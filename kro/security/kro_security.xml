@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="0">
+<data noupdate="1">
     <!--УДАЛЯЕМ МЕШАЮШИЕ ПРАВА ИЗ МОДУЛЯ PROJECT-->
     <delete model="ir.model.access" id="access_project_task"/>
     <delete model="ir.model.access" id="access_account_analytic_account_user"/>
@@ -15,11 +15,11 @@
 
 <data noupdate="0">
     <record id="group_problem_subscribers" model="res.groups">
-        <field name="name">Problems subscribers</field>
+        <field name="name">Подписчики на проблемы</field>
         <field name="full_name">Подписчики на проблемы</field>
     </record>
     <record id="group_adm_bp" model="res.groups">
-        <field name="name">Administrator BP</field>
+        <field name="name">Администратор БП</field>
         <field name="full_name">Администратор БП</field>
     </record>
 </data>
