@@ -14,7 +14,7 @@
             </field>
             <notebook position="inside">
                 <page string="Проблемы">
-                    <field name="problem_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_problem_form'}"/>
+                    <field name="problem_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
                 </page>
             </notebook>
         </field>
@@ -52,10 +52,9 @@
         <field name="act_window_id" ref="action_projects"/>
     </record>
     <!--ПРОБЛЕМА - PROBLEM-->
-    <record id="view_kro_problem_form" model="ir.ui.view">
+    <record id="kro_problem_form" model="ir.ui.view">
         <field name="name">kro.problem.form</field>
         <field name="model">kro.problem</field>
-        <field name="priority" eval="256"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <field name="name" position="replace">
@@ -116,7 +115,7 @@
             </field>
             <page name="description_page" position="after">
                 <page string="Цели">
-                    <field name="aim_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_aim_form'}"/>
+                    <field name="aim_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.kro_aim_form'}"/>
                 </page>
             </page>
         </field>
@@ -138,7 +137,6 @@
         <field name="name">kro.problem.gantt</field>
         <field name="model">kro.problem</field>
         <field name="type">gantt8</field>
-        <field eval="2" name="priority"/>
         <field name="arch" type="xml">
             <gantt8 date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id">
             </gantt8>
@@ -147,7 +145,7 @@
     <record id="action_problems" model="ir.actions.act_window">
         <field name="name">Проблемы</field>
         <field name="res_model">kro.problem</field>
-        <field name="view_mode">tree,calendar,form,gantt8</field>
+        <field name="view_mode">form,tree,calendar,gantt8</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую проблему.
@@ -166,11 +164,11 @@
     <record id="action_kro_problem_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_kro_problem_form"/>
+        <field name="view_id" ref="kro_problem_form"/>
         <field name="act_window_id" ref="action_problems"/>
     </record>
     <!--ЦЕЛЬ - AIM-->
-    <record id="view_kro_aim_form" model="ir.ui.view">
+    <record id="kro_aim_form" model="ir.ui.view">
         <field name="name">kro.aim.form</field>
         <field name="model">kro.aim</field>
         <field name="priority" eval="256" />
@@ -211,12 +209,12 @@
                 <field name="write_date" string="Изменено"/>
             </field>
             <field name="project_id" position="after">
-                <field name="problem_id" context="{'form_view_ref': 'kro.view_kro_problem_form'}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
                 <field name="user_id"/>
             </field>
             <page name="description_page" position="before">
                 <page string="Задачи">
-                    <field name="job_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_job_form'}">
+                    <field name="job_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.kro_job_form'}">
                         <tree string="Задачи">
                             <field name="name"/>
                             <field name="state"/>
@@ -336,15 +334,17 @@
     <record id="action_aim_form" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_kro_aim_form"/>
+        <field name="view_id" ref="kro_aim_form"/>
         <field name="act_window_id" ref="action_aims"/>
     </record>
     <!--ЗАДАЧА - JOB-->
-    <record id="view_kro_job_form" model="ir.ui.view">
-        <field name="name">kro.task.form</field>
+    <record id="kro_job_form" model="ir.ui.view">
+        <field name="name">kro.job.form</field>
         <field name="model">kro.job</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
-        <field name="priority" eval="256" />
+        <field name="active">True</field>
+        <field name="mode">extension</field>
+        <field name="priority" eval="32"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="replace">
                 <field name="tag_ids" invisible="1"/>
@@ -352,7 +352,6 @@
                 <field name="total_time"/>
                 <field name="progress" widget="progressbar"/>
             </field>
-
             <field name="planned_hours" position="replace">
                 <field name="planned_hours" invisible="1"/>
             </field>
@@ -392,8 +391,8 @@
                 <field name="write_date" string="Изменено"/>
             </field>
             <field name="project_id" position="after">
-                <field name="problem_id" context="{'form_view_ref': 'kro.view_kro_problem_form'}"/>
-                <field name="aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
+                <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}"/>
                 <field name="user_id"/>
             </field>
             <field name="user_id" position="replace">
@@ -436,23 +435,31 @@
         <field name="name">Задачи</field>
         <field name="res_model">kro.job</field>
         <field name="view_mode">tree,form,calendar,gantt8</field>
-        <field name="context">{}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую задачу.
             </p>
         </field>
     </record>
+    <record id="action_job_form_form" model="ir.actions.act_window" >
+        <field name="name">kro.job.action</field>
+        <field name="res_model">kro.job</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="kro_job_form"/>
+    </record>
     <record id="action_job_tree" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="kro_jobs_tree"/>
         <field name="act_window_id" ref="action_job"/>
     </record>
     <record id="action_job_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+        <field name="res_model">kro.job</field>
+        <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_kro_job_form"/>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="kro_job_form"/>
         <field name="act_window_id" ref="action_job"/>
     </record>
     <!--ЗАДАНИЕ - TASK-->
@@ -466,11 +473,11 @@
                 <group>
                 <field name="analytic_account_id" invisible="1"/>
                 <field name="project_id" attrs="{'invisible': ['|',('job_aim_id', '=', False),('project_id', '=', False)]}"/>
-                <field name="problem_id" context="{'form_view_ref': 'kro.view_kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
-                <!--<field name="aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>-->
-                <field name="aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>
-                <field name="job_aim_id" context="{'form_view_ref': 'kro.view_kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)]}"/>
-                <field name="job_id" context="{'form_view_ref': 'kro.view_kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
+                <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>-->
+                <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>
+                <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)]}"/>
+                <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)]}"/>
                 </group>
                 <group>
                     <group>

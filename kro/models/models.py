@@ -65,6 +65,10 @@ class Problem(models.Model):
             vals['message_follower_ids'] = self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
         return super(Problem, self).create(vals)
 
+    @api.multi
+    def get_formview_id(self):
+        return self.env.ref('kro.kro_problem_form').id
+
 
 class Aim(models.Model):
     _name = 'kro.aim'
@@ -182,6 +186,10 @@ class Aim(models.Model):
         default['code'] = self.env['ir.sequence'].next_by_code('kro.aim')
         return super(Aim, self).copy(default)
 
+    @api.multi
+    def get_formview_id(self):
+        return self.env.ref('kro.kro_aim_form').id
+
 
 class Job(models.Model):
     _name = 'kro.job'
@@ -223,6 +231,10 @@ class Job(models.Model):
     ]
 
     @api.one
+    def _task_count(self):
+        self.task_count = len(self.task_ids.ids)
+
+    @api.one
     @api.depends('task_ids')
     def _time_count(self):
         if len(self.task_ids):
@@ -259,6 +271,10 @@ class Job(models.Model):
             default = {}
         default['code'] = self.env['ir.sequence'].next_by_code('kro.job')
         return super(Job, self).copy(default)
+
+    @api.multi
+    def get_formview_id(self):
+        return self.env.ref('kro.kro_job_form').id
 
 
 class Task(models.Model):
