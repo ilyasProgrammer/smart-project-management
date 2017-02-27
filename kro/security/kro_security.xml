@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+    <!--УДАЛЯЕМ МЕШАЮШИЕ ПРАВА ИЗ МОДУЛЯ PROJECT-->
+    <delete model="ir.model.access" id="access_project_task"/>
+    <delete model="ir.model.access" id="access_account_analytic_account_user"/>
+    <delete model="ir.model.access" id="access_project_task_type_project_user"/>
+    <delete model="ir.model.access" id="access_partner_task user"/>
+    <delete model="ir.model.access" id="access_project_task_history"/>
+    <delete model="ir.model.access" id="access_project_task_history_cumulative"/>
+    <delete model="ir.model.access" id="access_resource_calendar"/>
+    <delete model="ir.model.access" id="access_resource_calendar_attendance"/>
+    <delete model="ir.model.access" id="access_resource_calendar_leaves_user"/>
+</data>
+
+<data noupdate="0">
+    <record id="group_problem_subscribers" model="res.groups">
+        <field name="name">Problems subscribers</field>
+        <field name="full_name">Подписчики на проблемы</field>
+    </record>
+    <record id="group_adm_bp" model="res.groups">
+        <field name="name">Administrator BP</field>
+        <field name="full_name">Администратор БП</field>
+    </record>
+</data>
+
+<data noupdate="1">
+
+</data>
+</openerp>

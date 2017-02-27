@@ -17,9 +17,9 @@ class Problem(models.Model):
     kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
     date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False, track_visibility='always')
     fact_date = fields.Date(u'Фактическая дата', select=True, track_visibility='always')
-    # user_id = fields.Many2one('res.users', 'Инициатор', select=True, track_visibility='onchange')
+    user_id = fields.Many2one('res.users', u'Инициатор', select=True, track_visibility='onchange', ondelete="set null")
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
-    user_aim_id = fields.Many2one('res.users', u'Ответственный за определение целей', select=True, track_visibility='onchange', ondelete='set null')
+    # user_aim_id = fields.Many2one('res.users', u'Ответственный за определение целей', select=True, track_visibility='onchange', ondelete='set null')
     # user_admin_id = fields.Many2one('res.users', u'Администратор', select=True, track_visibility='onchange')
     addressee_id = fields.Many2one('res.users', u'Адресат', select=True, track_visibility='onchange', ondelete='set null')
     description = fields.Html(u'Формулировка проблемы', track_visibility='always')
@@ -61,8 +61,15 @@ class Problem(models.Model):
     @api.model
     def create(self, vals):
         addressee = self.env['res.users'].browse(vals['addressee_id'])
-        if addressee.partner_id:
-            vals['message_follower_ids'] = self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
+        user = self.env['res.users'].browse(vals['user_id'])
+        vals['message_follower_ids'] = []
+        if addressee.partner_id and addressee != user:
+            vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
+        problem_users = self.env['res.groups'].search([('name', '=', 'Problems subscribers')])
+        if len(problem_users):
+            for usr in problem_users.users:
+                if usr != user:
+                    vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
         return super(Problem, self).create(vals)
 
     @api.multi
