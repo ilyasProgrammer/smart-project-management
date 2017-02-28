@@ -258,8 +258,6 @@ class Job(models.Model):
 
     @api.model
     def _store_history(self, ids):
-        if 1:
-            return False
         return True
 
     @api.model
@@ -329,15 +327,15 @@ class Task(models.Model):
     planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов', readonly=True)
     depend_on_ids = fields.Many2many('project.task', relation='depend_on_rel', column1='col_name1', column2='col_name2', string=u'Основание', track_visibility='onchange')
     dependent_ids = fields.Many2many('project.task', relation='dependent_rel', column1='col_name3', column2='col_name4', string=u'Зависимые', track_visibility='onchange')
-    executor = fields.Boolean(compute='compute_fields', default=False)
-    predicator = fields.Boolean(compute='compute_fields', default=False)
-    approver = fields.Boolean(compute='compute_fields', default=False)
-    planner = fields.Boolean(compute='compute_fields', default=False)
-    manager = fields.Boolean(compute='compute_fields', default=False)
-    admin = fields.Boolean(compute='compute_fields', default=False)
+    executor = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    predicator = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    approver = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    admin = fields.Boolean(compute='_compute_fields', default=False, store=False)
 
     @api.model
-    def compute_fields(self):
+    def _compute_fields(self):
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
         self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
         if self._uid == self.user_id.id or self.manager:
@@ -348,6 +346,14 @@ class Task(models.Model):
             self.predicator = True
         if self._uid == self.user_approver_id.id or self.planner:
             self.approver = True
+
+    @api.model
+    def default_get(self, fields):
+        res = super(Task, self).default_get(fields)
+        res['manager'] = True
+        res['admin'] = True
+        res['planner'] = True
+        return res
 
     @api.one
     @api.depends('plan_time_ex', 'plan_time_pr', 'plan_time_ap')
@@ -400,6 +406,10 @@ class Task(models.Model):
                 vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
             vals['message_follower_ids'] = make_unique(vals['message_follower_ids'])
         return super(Task, self).create(vals)
+
+    @api.model
+    def _store_history(self, ids):
+        return True
 
 
 def make_unique(original_list):

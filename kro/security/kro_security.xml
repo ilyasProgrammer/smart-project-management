@@ -2,15 +2,15 @@
 <openerp>
 <data noupdate="1">
     <!--УДАЛЯЕМ МЕШАЮШИЕ ПРАВА ИЗ МОДУЛЯ PROJECT-->
-    <delete model="ir.model.access" id="access_project_task"/>
-    <delete model="ir.model.access" id="access_account_analytic_account_user"/>
-    <delete model="ir.model.access" id="access_project_task_type_project_user"/>
-    <delete model="ir.model.access" id="access_partner_task user"/>
-    <delete model="ir.model.access" id="access_project_task_history"/>
-    <delete model="ir.model.access" id="access_project_task_history_cumulative"/>
-    <delete model="ir.model.access" id="access_resource_calendar"/>
-    <delete model="ir.model.access" id="access_resource_calendar_attendance"/>
-    <delete model="ir.model.access" id="access_resource_calendar_leaves_user"/>
+    <!--<delete model="ir.model.access" id="access_project_task"/>-->
+    <!--<delete model="ir.model.access" id="access_account_analytic_account_user"/>-->
+    <!--<delete model="ir.model.access" id="access_project_task_type_project_user"/>-->
+    <!--<delete model="ir.model.access" id="access_partner_task user"/>-->
+    <!--<delete model="ir.model.access" id="access_project_task_history"/>-->
+    <!--<delete model="ir.model.access" id="access_project_task_history_cumulative"/>-->
+    <!--<delete model="ir.model.access" id="access_resource_calendar"/>-->
+    <!--<delete model="ir.model.access" id="access_resource_calendar_attendance"/>-->
+    <!--<delete model="ir.model.access" id="access_resource_calendar_leaves_user"/>-->
 </data>
 
 <data noupdate="0">
