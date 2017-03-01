@@ -355,7 +355,7 @@
                 <label string=" - " class="oe_inline"/>
                 <field name="name" placeholder="Заголовок задачи ..."/>
             </field>
-            <page name='description_page' position="after">
+            <page name='description_page' position="before">
                 <field name="message_needaction" invisible="1"/>
                 <page string="Задания">
                     <field name="task_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'message_needaction':False, 'form_view_ref': 'project.view_task_form2'}">
@@ -454,6 +454,14 @@
         <field eval="258" name="priority"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" type="object" name="action_move_time" icon="fa-clock-o" string="Пересчитать связанные"/>
+                <field name="executor" invisible="1"/>
+                <field name="predicator" invisible="1"/>
+                <field name="approver" invisible="1"/>
+                <field name="planner" invisible="1"/>
+                <field name="admin" invisible="1"/>
+            </button>
             <xpath expr="//sheet//group/group/field[@name='tag_ids']/../.." position="replace">
                 <group>
                     <field name="analytic_account_id" invisible="1"/>
@@ -479,21 +487,9 @@
                     </group>
                 </group>
             </xpath>
-            <!--<xpath expr="//notebook/page[2]/group/field[@name='date_start']/.." position="replace">-->
-            <!--</xpath>-->
-            <button name="toggle_active" position="before">
-                <button class="oe_stat_button" type="object" name="action_move_time" icon="fa-clock-o" string="Пересчитать связанные"/>
-            </button>
-            <!--<field name="date_deadline" position="replace">-->
-                <!--<field name="date_deadline" invisible="1"/>-->
-            <!--</field>-->
             <field name="name" position="replace">
-                <field name="name" placeholder="Заголовок задания ..." attrs="{'readonly': [('planner', '=', False)]}"/>
-                <field name="executor" invisible="1"/>
-                <field name="predicator" invisible="1"/>
-                <field name="approver" invisible="1"/>
-                <field name="planner" invisible="1"/>
-                <field name="admin" invisible="1"/>
+                <!--<field name="name" placeholder="Заголовок задания ..." attrs="{'readonly': [('planner', '=', False)]}"/>-->
+                <field name="name" placeholder="Заголовок задания ..." />
             </field>
             <field name="stage_id" position="replace">
                 <!--<field name="state" widget="statusbar" attrs="{'clickable': [('planner', '=', True),('admin', '=', True)]}"/>-->
@@ -586,8 +582,8 @@
                     </group>
                 </group>
             </notebook>
-            <field name="description" position="attributes">
-                <attribute name="readonly">[('planner', '=', False)]</attribute>
+            <field name="description" position="replace">
+                <field name="description"  attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
             <field name="description" position="after">
                 <h3>Требуемый результат + способ  его измерения</h3>

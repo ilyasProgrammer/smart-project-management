@@ -286,6 +286,7 @@ class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
     # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
+    description = fields.Html(u'Описание', track_visibility='always')
     date_start = fields.Date(u'Исполнитель дата начала', track_visibility='always')
     date_end_ex = fields.Date(u'Исполнитель дата окончания', track_visibility='onchange')
     date_start_pr = fields.Date(u'Утверждающий дата начала', track_visibility='onchange')
@@ -327,12 +328,12 @@ class Task(models.Model):
     planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов', readonly=True)
     depend_on_ids = fields.Many2many('project.task', relation='depend_on_rel', column1='col_name1', column2='col_name2', string=u'Основание', track_visibility='onchange')
     dependent_ids = fields.Many2many('project.task', relation='dependent_rel', column1='col_name3', column2='col_name4', string=u'Зависимые', track_visibility='onchange')
-    executor = fields.Boolean(compute='_compute_fields', default=False, store=False)
-    predicator = fields.Boolean(compute='_compute_fields', default=False, store=False)
-    approver = fields.Boolean(compute='_compute_fields', default=False, store=False)
-    planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
-    manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
-    admin = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    executor = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    predicator = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    approver = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    planner = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    manager = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    admin = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
 
     @api.model
     def _compute_fields(self):
@@ -392,20 +393,21 @@ class Task(models.Model):
 
     @api.model
     def create(self, vals):
-        executor = self.env['res.users'].browse(vals['user_executor_id'])
-        approver = self.env['res.users'].browse(vals['user_approver_id'])
-        predicator = self.env['res.users'].browse(vals['user_predicator_id'])
-        user = self.env['res.users'].browse(vals['user_id'])
-        if executor.partner_id or approver.partner_id or predicator.partner_id:
-            vals['message_follower_ids'] = []
-            if executor != user and executor.partner_id:
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {executor.partner_id.id: None}, {}, force=True)[0]
-            if approver != user and approver.partner_id:
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {approver.partner_id.id: None}, {}, force=True)[0]
-            if predicator != user and predicator.partner_id:
-                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
-            vals['message_follower_ids'] = make_unique(vals['message_follower_ids'])
-        return super(Task, self).create(vals)
+        subs = []
+        if vals.get('user_executor_id', False):
+            executor = self.env['res.users'].browse(vals['user_executor_id'])
+            subs += self.env['mail.followers']._add_follower_command(self._name, [], {executor.partner_id.id: None}, {}, force=True)[0]
+        if vals.get('user_approver_id', False):
+            approver = self.env['res.users'].browse(vals['user_approver_id'])
+            subs += self.env['mail.followers']._add_follower_command(self._name, [], {approver.partner_id.id: None}, {}, force=True)[0]
+        if vals.get('user_predicator_id', False):
+            predicator = self.env['res.users'].browse(vals['user_predicator_id'])
+            subs += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
+        subs = make_unique(subs)
+        if len(subs):
+            vals['message_follower_ids'] = subs
+        res = super(Task, self).create(vals)
+        return res
 
     @api.model
     def _store_history(self, ids):
@@ -413,6 +415,8 @@ class Task(models.Model):
 
 
 def make_unique(original_list):
+    if len(original_list):
+        return []
     unique_list = []
     [unique_list.append(obj) for obj in original_list if obj not in unique_list]
     return unique_list
