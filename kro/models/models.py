@@ -410,11 +410,11 @@ class Task(models.Model):
         unique_subs = make_unique(subs)
         if len(subs):
             vals['message_follower_ids'] = unique_subs
-        partner_ids = []
-        for partner in vals['message_follower_ids']:
-            partner_ids.append((4, partner[2]['partner_id']))
-        if len(partner_ids):
-            vals['partner_ids'] = partner_ids
+            partner_ids = []
+            for partner in vals['message_follower_ids']:
+                partner_ids.append((4, partner[2]['partner_id']))
+            if len(partner_ids):
+                vals['partner_ids'] = partner_ids
         res = super(Task, self).create(vals)
         # res.with_context({'mail_post_autofollow': True}).message_post(body='Новая задача', subject='Тема', message_type='notification', subtype='mail.mt_comment', partner_ids=partner_ids)
         return res
