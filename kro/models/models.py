@@ -394,19 +394,29 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         subs = []
+        user = self.env['res.users'].browse(vals['user_id'])
         if vals.get('user_executor_id', False):
             executor = self.env['res.users'].browse(vals['user_executor_id'])
-            subs += self.env['mail.followers']._add_follower_command(self._name, [], {executor.partner_id.id: None}, {}, force=True)[0]
+            if executor != user:
+                subs += self.env['mail.followers']._add_follower_command(self._name, [], {executor.partner_id.id: None}, {}, force=True)[0]
         if vals.get('user_approver_id', False):
             approver = self.env['res.users'].browse(vals['user_approver_id'])
-            subs += self.env['mail.followers']._add_follower_command(self._name, [], {approver.partner_id.id: None}, {}, force=True)[0]
+            if approver != user:
+                subs += self.env['mail.followers']._add_follower_command(self._name, [], {approver.partner_id.id: None}, {}, force=True)[0]
         if vals.get('user_predicator_id', False):
             predicator = self.env['res.users'].browse(vals['user_predicator_id'])
-            subs += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
-        subs = make_unique(subs)
+            if predicator != user:
+                subs += self.env['mail.followers']._add_follower_command(self._name, [], {predicator.partner_id.id: None}, {}, force=True)[0]
+        unique_subs = make_unique(subs)
         if len(subs):
-            vals['message_follower_ids'] = subs
+            vals['message_follower_ids'] = unique_subs
+        partner_ids = []
+        for partner in vals['message_follower_ids']:
+            partner_ids.append((4, partner[2]['partner_id']))
+        if len(partner_ids):
+            vals['partner_ids'] = partner_ids
         res = super(Task, self).create(vals)
+        # res.with_context({'mail_post_autofollow': True}).message_post(body='Новая задача', subject='Тема', message_type='notification', subtype='mail.mt_comment', partner_ids=partner_ids)
         return res
 
     @api.model
@@ -415,7 +425,7 @@ class Task(models.Model):
 
 
 def make_unique(original_list):
-    if len(original_list):
+    if not len(original_list):
         return []
     unique_list = []
     [unique_list.append(obj) for obj in original_list if obj not in unique_list]
