@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
     <!--УДАЛЯЕМ МЕШАЮШИЕ ПРАВА ИЗ МОДУЛЯ PROJECT-->
     <delete model="ir.model.access" id="access_project_task"/>
     <delete model="ir.model.access" id="access_account_analytic_account_user"/>
