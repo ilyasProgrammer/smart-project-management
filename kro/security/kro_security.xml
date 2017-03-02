@@ -12,19 +12,48 @@
     <!--<delete model="ir.model.access" id="access_resource_calendar_attendance"/>-->
     <!--<delete model="ir.model.access" id="access_resource_calendar_leaves_user"/>-->
 </data>
-
 <data noupdate="0">
     <record id="group_problem_subscribers" model="res.groups">
         <field name="name">Подписчики на проблемы</field>
         <field name="full_name">Подписчики на проблемы</field>
+        <field name="category_id" ref="base.module_category_project_management"/>
     </record>
     <record id="group_adm_bp" model="res.groups">
         <field name="name">Администратор БП</field>
         <field name="full_name">Администратор БП</field>
+        <field name="category_id" ref="base.module_category_project_management"/>
+    </record>
+    <record id="group_project_aim" model="res.groups">
+        <field name="name">Ответственный за определение целей</field>
+        <field name="category_id" ref="base.module_category_project_management"/>
+    </record>
+    <record id="group_project_obs" model="res.groups">
+        <field name="name">Наблюдатель</field>
+        <field name="category_id" ref="base.module_category_project_management"/>
+    </record>
+    <record id="group_project_obs_max" model="res.groups">
+        <field name="name">Наблюдатель с максимальным доступом</field>
+        <field name="category_id" ref="base.module_category_project_management"/>
     </record>
 </data>
-
-<data noupdate="1">
-
+<data noupdate="0">
+    <record model="ir.rule" id="task_visibility_rule">
+        <field name="name">Видимость заданий</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">
+            [
+                '|','|','|',
+                ('user_id', '=', user.id),
+                ('user_executor_id', '=', user.id),
+                ('user_predicator_id', '=', user.id),
+                ('user_approver_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 </data>
 </openerp>

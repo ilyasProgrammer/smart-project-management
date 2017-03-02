@@ -738,12 +738,12 @@
         <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <!--МЕНЮ-->
-    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1" groups="project.group_project_manager,group_adm_bp"/>
-    <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2" groups="project.group_project_manager,group_adm_bp"/>
-    <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3" groups="project.group_project_manager,group_adm_bp"/>
-    <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager,group_adm_bp"/>
+    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
+    <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
+    <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
+    <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
-    <menuitem id="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user,group_adm_bp"/>
+    <menuitem id="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
 
 </data>
 </openerp>

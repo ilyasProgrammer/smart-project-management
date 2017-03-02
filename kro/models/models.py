@@ -345,7 +345,7 @@ class Task(models.Model):
     def _compute_fields(self):
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
         self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
-        if self.admin or self.manager:
+        if self.manager:
             self.executor = True
             self.predicator = True
             self.approver = True

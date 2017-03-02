@@ -14,4 +14,25 @@ b1,b1,model_kro_problem,group_adm_bp,1,1,1,0
 b2,b2,model_kro_aim,group_adm_bp,1,1,0,0
 b3,b3,model_kro_job,group_adm_bp,1,1,0,0
 b4,b4,project.model_project_task,group_adm_bp,1,1,0,0
+d0,d0,project.model_project_task_history,group_project_aim,1,1,0,0
+d1,d1,model_kro_problem,group_project_aim,1,1,1,0
+d2,d2,model_kro_aim,group_project_aim,1,1,1,0
+d3,d3,model_kro_job,group_project_aim,1,1,1,0
+d4,d4,project.model_project_task,group_project_aim,1,1,1,0
+d5,d5,project.model_project_project,group_project_aim,1,1,1,0
+
+e0,e0,project.model_project_task_history,group_project_obs,1,0,0,0
+e1,e1,model_kro_problem,group_project_obs,1,0,1,0
+e2,e2,model_kro_aim,group_project_obs,1,0,1,0
+e3,e3,model_kro_job,group_project_obs,1,0,1,0
+e4,e4,project.model_project_task,group_project_obs,1,0,1,0
+e5,e5,project.model_project_project,group_project_obs,1,0,0,0
+
+
+f0,f0,project.model_project_task_history,",group_project_obs_max",1,0,0,0
+f1,f1,model_kro_problem,",group_project_obs_max",1,0,1,0
+f2,f2,model_kro_aim,",group_project_obs_max",1,0,1,0
+f3,f3,model_kro_job,",group_project_obs_max",1,0,1,0
+f4,f4,project.model_project_task,",group_project_obs_max",1,0,1,0
+f5,f5,project.model_project_project,",group_project_obs_max",1,0,0,0
 
