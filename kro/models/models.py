@@ -339,8 +339,9 @@ class Task(models.Model):
 
     @api.one
     def _get_attached_docs(self):
-        for rec in self:
-            rec.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', rec.id)], count=True) or 0
+        pass
+        # for rec in self:
+        #     rec.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', rec.id)], count=True) or 0
 
     @api.one
     def _compute_fields(self):
