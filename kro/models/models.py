@@ -337,7 +337,7 @@ class Task(models.Model):
     admin = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     doc_count = fields.Integer(compute='_get_attached_docs', string="Количество прикрепленных вложений")
 
-    @api.model
+    @api.one
     def _get_attached_docs(self):
         self.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', self.id)], count=True) or 0
 
