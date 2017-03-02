@@ -29,10 +29,10 @@ e4,e4,project.model_project_task,group_project_obs,1,0,1,0
 e5,e5,project.model_project_project,group_project_obs,1,0,0,0
 
 
-f0,f0,project.model_project_task_history,",group_project_obs_max",1,0,0,0
-f1,f1,model_kro_problem,",group_project_obs_max",1,0,1,0
-f2,f2,model_kro_aim,",group_project_obs_max",1,0,1,0
-f3,f3,model_kro_job,",group_project_obs_max",1,0,1,0
-f4,f4,project.model_project_task,",group_project_obs_max",1,0,1,0
-f5,f5,project.model_project_project,",group_project_obs_max",1,0,0,0
+f0,f0,project.model_project_task_history,"group_project_obs_max",1,0,0,0
+f1,f1,model_kro_problem,"group_project_obs_max",1,0,1,0
+f2,f2,model_kro_aim,"group_project_obs_max",1,0,1,0
+f3,f3,model_kro_job,"group_project_obs_max",1,0,1,0
+f4,f4,project.model_project_task,"group_project_obs_max",1,0,1,0
+f5,f5,project.model_project_project,"group_project_obs_max",1,0,0,0
 
