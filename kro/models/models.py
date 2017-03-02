@@ -341,7 +341,7 @@ class Task(models.Model):
     def _get_attached_docs(self):
         self.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', self.id)], count=True) or 0
 
-    @api.model
+    @api.one
     def _compute_fields(self):
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
         self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False

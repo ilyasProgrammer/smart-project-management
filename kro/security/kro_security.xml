@@ -14,8 +14,8 @@
 </data>
 <data noupdate="0">
     <record id="group_problem_subscribers" model="res.groups">
-        <field name="name">Подписчики на проблемы</field>
-        <field name="full_name">Подписчики на проблемы</field>
+        <field name="name">Подписчик на проблемы</field>
+        <field name="full_name">Подписчик на проблемы</field>
         <field name="category_id" ref="base.module_category_project_management"/>
     </record>
     <record id="group_adm_bp" model="res.groups">
