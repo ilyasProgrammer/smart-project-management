@@ -285,15 +285,15 @@ class Job(models.Model):
 class Task(models.Model):
     _inherit = 'project.task'
     _description = u'Задание'
-    # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
     description = fields.Html(u'Описание', track_visibility='always')
+    # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
+    date_end = fields.Date(compute='_set_date_end', track_visibility='always')
     date_start = fields.Date(u'Исполнитель дата начала', track_visibility='always')
     date_end_ex = fields.Date(u'Исполнитель дата окончания', track_visibility='onchange')
     date_start_pr = fields.Date(u'Утверждающий дата начала', track_visibility='onchange')
     date_end_pr = fields.Date(u'Утверждающий дата окончания', track_visibility='onchange')
     date_start_ap = fields.Date(u'Подтверждающий дата начала', track_visibility='onchange')
     date_end_ap = fields.Date(u'Подтверждающий дата окончания', track_visibility='always')
-    date_end = fields.Date(compute='_set_date_end', track_visibility='always')
     plan_time_ex = fields.Float(u'План по времени исполнитель', track_visibility='onchange')
     plan_time_pr = fields.Float(u'План по времени утверждающий', track_visibility='onchange')
     plan_time_ap = fields.Float(u'План по времени подтверджающий', track_visibility='onchange')
@@ -328,6 +328,7 @@ class Task(models.Model):
     planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов', readonly=True)
     depend_on_ids = fields.Many2many('project.task', relation='depend_on_rel', column1='col_name1', column2='col_name2', string=u'Основание', track_visibility='onchange')
     dependent_ids = fields.Many2many('project.task', relation='dependent_rel', column1='col_name3', column2='col_name4', string=u'Зависимые', track_visibility='onchange')
+    progress = fields.Float(compute='_time_count', string=u'Прогресс')
     executor = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     predicator = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     approver = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
@@ -339,6 +340,10 @@ class Task(models.Model):
     def _compute_fields(self):
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
         self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
+        if self.admin or self.manager:
+            self.executor = True
+            self.predicator = True
+            self.approver = True
         if self._uid == self.user_id.id or self.manager:
             self.planner = True
         if self._uid == self.user_executor_id.id or self.planner:
@@ -354,12 +359,19 @@ class Task(models.Model):
         res['manager'] = True
         res['admin'] = True
         res['planner'] = True
+        res['executor'] = True
+        res['predicator'] = True
+        res['approver'] = True
         return res
 
     @api.one
-    @api.depends('plan_time_ex', 'plan_time_pr', 'plan_time_ap')
+    @api.depends('plan_time_ex', 'plan_time_pr', 'plan_time_ap', 'timesheet_ids')
     def _time_count(self):
         self.planned_hours = self.plan_time_ex+self.plan_time_pr+self.plan_time_ap
+        time_finished = sum([r.unit_amount for r in self.timesheet_ids])
+        self.progress = round(min(100.0 * time_finished / self.planned_hours, 99.99), 2)
+        if str(self.progress) == '99.99' and self.state == 'finished':
+            self.progress = 100.0
 
     @api.model
     def action_move_time(self, active_id):

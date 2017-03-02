@@ -498,15 +498,15 @@
                 <field name="message_needaction" invisible="1"/>
             </field>
             <field name="partner_id" position="after">
-                <field name="date_start" readonly="1"/>
+                <!--<field name="date_start" readonly="1"/>-->
                 <field name="date_end" readonly="1"/>
             </field>
             <page name="description_page" position='after'>
                 <page name="depend_on_ids" string='Блокирующие задания'>
-                    <field name="depend_on_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                    <field name="depend_on_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False),('admin', '=', False)]}"/>
                 </page>
                 <page name="dependent_ids" string='Блокируемые задания'>
-                    <field name="dependent_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}"/>
+                    <field name="dependent_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False),('admin', '=', False)]}"/>
                 </page>
             </page>
             <notebook position="before">
@@ -704,6 +704,16 @@
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="kro_task_gantt"/>
         <field name="act_window_id" ref="kro_actions_view_taskss"/>
+    </record>
+    <record id="project_gantt" model="ir.ui.view">
+        <field name="name">project.gantt8_view_task_form2.inherit</field>
+        <field name="model">project.task</field>
+        <field eval="258" name="priority"/>
+        <field name="inherit_id" ref="project_gantt8.gantt8_view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet//group/field[@name='date_start']/.." position="replace">
+            </xpath>
+        </field>
     </record>
     <!--ПРЯЧЕМ МЕНЮ-->
     <record id="make_invisible" model="res.groups">
