@@ -335,6 +335,11 @@ class Task(models.Model):
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     admin = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
+    doc_count = fields.Integer(compute='_get_attached_docs', string="Количество прикрепленных вложений")
+
+    @api.model
+    def _get_attached_docs(self):
+        self.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', self.id)], count=True) or 0
 
     @api.model
     def _compute_fields(self):
@@ -369,7 +374,8 @@ class Task(models.Model):
     def _time_count(self):
         self.planned_hours = self.plan_time_ex+self.plan_time_pr+self.plan_time_ap
         time_finished = sum([r.unit_amount for r in self.timesheet_ids])
-        self.progress = round(min(100.0 * time_finished / self.planned_hours, 99.99), 2)
+        if self.planned_hours:
+            self.progress = round(min(100.0 * time_finished / self.planned_hours, 99.99), 2)
         if str(self.progress) == '99.99' and self.state == 'finished':
             self.progress = 100.0
 
@@ -392,6 +398,28 @@ class Task(models.Model):
             r_end = datetime.datetime.strptime(base.date_end, '%Y-%m-%d')
             if r_end > start:
                 task.date_start = base.date_end
+
+    @api.model
+    def attachment_tree_view(self, active_id):
+        task = self.env['project.task'].browse(active_id)
+        domain = [('res_model', '=', 'project.task'), ('res_id', '=', task.id)]
+        res_id = task.id
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'form',
+            'help': _('''<p class="oe_view_nocontent_create">
+                        Documents are attached to the tasks and issues of your project.</p><p>
+                        Send messages or log internal notes with attachments to link
+                        documents to your project.
+                    </p>'''),
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
 
     @api.one
     @api.depends('date_end_ap', 'date_end_pr')
