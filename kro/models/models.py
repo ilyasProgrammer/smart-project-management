@@ -463,7 +463,7 @@ class Task(models.Model):
     def _set_date_end(self):
         end_date_ap = int(self.date_end_ap.replace('-', '')) if self.date_end_ap else 0
         end_date_pr = int(self.date_end_pr.replace('-', '')) if self.date_end_pr else 0
-        if end_date_ap > end_date_pr:
+        if end_date_ap >= end_date_pr:
             self.date_end = self.date_end_ap
         elif end_date_ap < end_date_pr:
             self.date_end = self.date_end_pr
