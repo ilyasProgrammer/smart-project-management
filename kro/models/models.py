@@ -47,6 +47,25 @@ class Problem(models.Model):
     delay_hours = fields.Boolean()
     timesheet_ids = fields.Boolean()
     analytic_account_id = fields.Boolean()
+    admin = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+
+    @api.one
+    def _compute_fields(self):
+        self.admin = False
+        self.manager = False
+        self.planner = False
+        self.obs = False
+        self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
+        self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
+        if self.admin or self.manager:
+            self.planner = True
+        if self._uid == self.user_id.id:
+            self.planner = True
+        if self._uid == self.addressee_id.id:
+            self.obs = True
 
     @api.model
     def _store_history(self, ids):
@@ -236,6 +255,23 @@ class Job(models.Model):
         ('kro_job_unique_code', 'UNIQUE (code)',
          _('The code must be unique!')),
     ]
+    admin = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+
+    @api.one
+    def _compute_fields(self):
+        self.admin = False
+        self.manager = False
+        self.planner = False
+        self.obs = False
+        self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
+        self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
+        if self.admin or self.manager:
+            self.planner = True
+        if self._uid == self.user_id.id:
+            self.planner = True
 
     @api.one
     def _task_count(self):
