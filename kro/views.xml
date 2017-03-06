@@ -72,7 +72,7 @@
                 <field name="date_deadline" attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
             <field name="tag_ids" position="replace">
-                <field name="tag_ids" attrs="{'invisible': [('planner', '=', False)]}"/>
+                <field name="tag_ids" invisible="1"/>
             </field>
             <field name="description" position="replace">
                 <field name="description" attrs="{'readonly': [('planner', '=', False)]}"/>
@@ -156,7 +156,7 @@
     <record id="action_problems" model="ir.actions.act_window">
         <field name="name">Проблемы</field>
         <field name="res_model">kro.problem</field>
-        <field name="view_mode">form,tree,calendar,gantt8</field>
+        <field name="view_mode">tree,form,calendar,gantt8</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую проблему.
@@ -173,7 +173,7 @@
         <field name="act_window_id" ref="action_problems"/>
     </record>
     <record id="action_kro_problem_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="kro_problem_form"/>
         <field name="act_window_id" ref="action_problems"/>

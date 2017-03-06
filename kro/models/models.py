@@ -68,6 +68,17 @@ class Problem(models.Model):
             self.obs = True
 
     @api.model
+    def default_get(self, fields):
+        res = super(Problem, self).default_get(fields)
+        res['manager'] = True
+        res['admin'] = True
+        res['planner'] = True
+        res['executor'] = True
+        res['predicator'] = True
+        res['approver'] = True
+        return res
+
+    @api.model
     def _store_history(self, ids):
         if 1:
             return False
@@ -465,7 +476,7 @@ class Task(models.Model):
         end_date_pr = int(self.date_end_pr.replace('-', '')) if self.date_end_pr else 0
         if end_date_ap >= end_date_pr:
             self.date_end = self.date_end_ap
-        elif end_date_ap < end_date_pr:
+        elif end_date_ap <= end_date_pr:
             self.date_end = self.date_end_pr
 
     @api.model
