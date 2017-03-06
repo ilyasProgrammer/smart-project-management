@@ -97,7 +97,7 @@ class Problem(models.Model):
             vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
         problem_users = self.env.ref('kro.group_problem_subscribers').users
         if len(problem_users):
-            for usr in problem_users.users:
+            for usr in problem_users:
                 if usr != user:
                     vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
         return super(Problem, self).create(vals)
