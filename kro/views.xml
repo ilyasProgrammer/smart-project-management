@@ -488,6 +488,7 @@
             </button>
             <xpath expr="//sheet//group/group/field[@name='tag_ids']/../.." position="replace">
                 <group>
+                    <field name="current_user_id"/>
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="project_id" attrs="{'invisible': ['|',('job_aim_id', '=', False),('project_id', '=', False)]}"/>
                     <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
@@ -526,10 +527,10 @@
                 <field name="date_end" readonly="1"/>
             </field>
             <page name="description_page" position='after'>
-                <page name="depend_on_ids" string='Предыдущии'>
+                <page name="depend_on_ids" string='Предыдущие'>
                     <field name="depend_on_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False),('admin', '=', False)]}"/>
                 </page>
-                <page name="dependent_ids" string='Следующии'>
+                <page name="dependent_ids" string='Следующие'>
                     <field name="dependent_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False),('admin', '=', False)]}"/>
                 </page>
             </page>
@@ -625,7 +626,8 @@
                     <field name="job_id" string="Задача"/>
                     <field name="name" string="Задание"/>
                     <field name="state"/>
-                    <field name="user_id" string="Ответственный"/>
+                    <field name="current_user_id" string="Ответственный"/>
+                    <field name="user_id" string="Планирующий"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="progress"/>
@@ -644,7 +646,8 @@
                 <field name="project_id"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
-                <filter string="Мои задания" name="my_tasks" domain="['|','|','|',('user_id','=',uid),('user_executor_id','=',uid),('user_predicator_id','=',uid),('user_approver_id','=',uid)]"/>
+                <filter string="Мои задания" name="my_tasks" domain="[('current_user_id','=',uid)]"/>
+                <filter string="Я участник" name="i_participant" domain="['|','|','|',('user_id','=',uid),('user_executor_id','=',uid),('user_predicator_id','=',uid),('user_approver_id','=',uid)]"/>
                 <filter string="Не назначены" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Новые" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                 <filter string="Архив" name="inactive" domain="[('active','=',False)]"/>

@@ -358,6 +358,7 @@ class Task(models.Model):
     user_executor_id = fields.Many2one('res.users', string=u'Исполнитель', ondelete="set null", track_visibility='onchange')
     user_predicator_id = fields.Many2one('res.users', string=u'Утверждающий', ondelete="set null", track_visibility='onchange')
     user_approver_id = fields.Many2one('res.users', string=u'Подтверждающий', ondelete="set null", track_visibility='onchange')
+    current_user_id = fields.Many2one('res.users', compute='_get_responsible', string=u'Ответственный', track_visibility='always', store=True)
     approved_by_executor = fields.Boolean(u'Согласовал исполнитель', track_visibility='onchange')
     approved_by_predicator = fields.Boolean(u'Согласовал утверждающий', track_visibility='onchange')
     approved_by_approver = fields.Boolean(u'Согласовал подтверждающий', track_visibility='onchange')
@@ -385,6 +386,23 @@ class Task(models.Model):
     doc_count = fields.Integer(compute='_get_attached_docs', string="Количество прикрепленных вложений")
 
     @api.one
+    @api.depends('state', 'user_executor_id', 'user_predicator_id', 'user_approver_id', 'user_id')
+    def _get_responsible(self):
+        admins = self.env.ref('kro.group_adm_bp').users
+        if self.state in ['plan', 'stated', 'approved', 'correction']:
+            self.current_user_id = self.user_id
+        if self.state == 'agreement' and len(admins):
+            self.current_user_id = admins[0]
+        if self.state in ['assigned', 'execution']:
+            self.current_user_id = self.user_executor_id
+        if self.state in ['stating']:
+            self.current_user_id = self.user_predicator_id
+        if self.state in ['approvement']:
+            self.current_user_id = self.user_approver_id
+        if self.state in ['finished']:
+            self.current_user_id = None
+
+    @api.one
     def _get_attached_docs(self):
         for rec in self:
             rec.doc_count = self.env['ir.attachment'].search([('res_model', '=', 'project.task'), ('res_id', '=', rec.id)], count=True) or 0
@@ -392,7 +410,8 @@ class Task(models.Model):
     @api.one
     def _compute_fields(self):
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
-        self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
+        admins = self.env.ref('kro.group_adm_bp').users
+        self.admin = True if self._uid in [r.id for r in admins] else False
         if self.manager:
             self.executor = True
             self.predicator = True
