@@ -78,7 +78,7 @@
                 <field name="description" attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
             <field name="stage_id" position="replace">
-                <field name="state" widget="statusbar"/>
+                <field name="state" widget="statusbar" clickable="True"/>
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" invisible="1"/>
             </field>
             <field name="project_id" position="replace">
@@ -204,7 +204,7 @@
         <field name="priority" eval="256" />
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <field name="tag_ids" position="after">
+            <field name="tag_ids" position="replace">
                 <field name="planned_hours"/>
                 <field name="total_time"/>
                 <field name="progress" widget="progressbar"/>
@@ -212,11 +212,20 @@
             <field name="planned_hours" position="replace">
                 <field name="planned_hours" invisible="1"/>
             </field>
-            <field name="name" position="replace">
-                <label string="Цель № " class="oe_inline"/>
-                <field name="code" class="oe_inline"/>
-                <label string=" - " class="oe_inline"/>
-                <field name="name" placeholder="Заголовок цели ..."/>
+            <xpath expr="//sheet//h1" position="replace">
+                <h4 class="o_row">
+                    <field name="priority" widget="priority" nolabel="1"/>
+                    <span> Цель № </span>
+                    <field name="code"/>
+                </h4>
+                <h3>
+                    <field name="name" nolabel="1"/>
+                </h3>
+            </xpath>
+            <xpath expr="//sheet//group/group/field[@name='project_id']/../.." position="before">
+            </xpath>
+            <field name="project_id" position="replace">
+                <field name="project_id" readonly="0"/>
             </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" type="object" name="action_tasks" icon="fa-tasks" context="{'task_ids': task_ids}">

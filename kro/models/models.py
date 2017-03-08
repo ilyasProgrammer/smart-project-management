@@ -122,11 +122,11 @@ class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
     _order = 'code'
-    code = fields.Char(string=u'Номер', required=True, default="/")
+    code = fields.Char(string=u'Цель № ', required=True, default="/")
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
-    problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null', readonly=True)
-    project_id = fields.Many2one(related='problem_id.kro_project_id', readonly=True, string=u'Проект', ondelete='set null')
+    problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null')
+    project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', ondelete='set null')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
     reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null', track_visibility='always')
     reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null', track_visibility='always')
