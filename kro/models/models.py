@@ -22,6 +22,7 @@ class Problem(models.Model):
     # user_aim_id = fields.Many2one('res.users', u'Ответственный за определение целей', select=True, track_visibility='onchange', ondelete='set null')
     # user_admin_id = fields.Many2one('res.users', u'Администратор', select=True, track_visibility='onchange')
     addressee_id = fields.Many2one('res.users', u'Адресат', select=True, track_visibility='onchange', ondelete='set null')
+    current_user_id = fields.Many2one('res.users', compute='_get_responsible', string=u'Ответственный', track_visibility='always', store=True)
     description = fields.Html(u'Формулировка проблемы', track_visibility='always')
     effects = fields.Text(u'Последствия', track_visibility='always')
     causes = fields.Text(u'Причины', track_visibility='always')
@@ -51,6 +52,16 @@ class Problem(models.Model):
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+
+    @api.one
+    @api.depends('state', 'addressee_id', 'user_id')
+    def _get_responsible(self):
+        if self.state in ['plan', 'suspended', 'taken']:
+            self.current_user_id = self.user_id
+        if self.state in ['moved', 'process']:
+            self.current_user_id = self.addressee_id
+        if self.state in ['canceled', 'closed']:
+            self.current_user_id = None
 
     @api.one
     def _compute_fields(self):

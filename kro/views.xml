@@ -87,6 +87,7 @@
                 <field name="addressee_id" attrs="{'readonly': [('obs', '=', False),('planner', '=', False)]}"/>
             </field>
             <field name="date_deadline" position="before">
+                <field name="current_user_id" string="Ответственный"/>
                 <field name="create_date" string="Дата регистрации"/>
             </field>
             <field name="date_deadline" position="after">
@@ -132,16 +133,35 @@
         </field>
     </record>
     <record id="kro_problem_tree" model="ir.ui.view">
-        <field name="name">kro.problem.tree</field>
+        <field name="name">kro.problem.tree.form</field>
         <field name="model">kro.problem</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree string="Проблемы">
                 <field name="name" string="Название"/>
                 <field name="state"/>
+                <field name="current_user_id"/>
                 <field name="addressee_id"/>
-                <field name="kro_project_id"/>
                 <field name="user_id"/>
+                <field name="kro_project_id"/>
             </tree>
+        </field>
+    </record>
+    <record id="kro_problem_search_form" model="ir.ui.view">
+        <field name="name">kro.problem.search.form</field>
+        <field name="model">kro.problem</field>
+        <field name="arch" type="xml">
+            <search string="Проблемы">
+                <field name="name" string="Название"/>
+                <field name="state"/>
+                <field name="current_user_id"/>
+                <field name="addressee_id"/>
+                <field name="user_id"/>
+                <field name="kro_project_id"/>
+                <filter string="Мои проблемы" name="my_problems" domain="[('current_user_id','=',uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Проект" name="project" context="{'group_by':'project_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
     <record id="kro_problem_gantt" model="ir.ui.view">
@@ -157,12 +177,11 @@
         <field name="name">Проблемы</field>
         <field name="res_model">kro.problem</field>
         <field name="view_mode">tree,form,calendar,gantt8</field>
+        <field name="context">{"search_default_my_problems":1}</field>
+        <field name="search_view_id" ref="kro_problem_search_form"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую проблему.
-            </p>
-            <p>
-                Проблемы используются для ...
             </p>
         </field>
     </record>
