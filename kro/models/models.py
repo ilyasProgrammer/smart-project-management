@@ -136,6 +136,7 @@ class Aim(models.Model):
     reason_aside_task = fields.Many2one('project.task', u'Причина откладывания - задача', select=True, ondelete='set null', track_visibility='always')
     reason_correction = fields.Text(u'Причина коррекции', track_visibility='always')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
+    current_user_id = fields.Many2one('res.users', compute='_get_responsible', string=u'Ответственный', track_visibility='always', store=True)
     job_ids = fields.One2many('kro.job', 'aim_id', ondelete="cascade", string=u'Задачи', track_visibility='always')
     task_ids = fields.One2many('project.task', 'aim_id', ondelete="cascade", string=u'Задания', track_visibility='always')
     task_count = fields.Integer(compute='_task_count')
@@ -157,6 +158,15 @@ class Aim(models.Model):
         ('kro_aim_unique_code', 'UNIQUE (code)',
          _('The code must be unique!')),
     ]
+
+    @api.one
+    @api.depends('state', 'user_id')
+    def _get_responsible(self):
+        admins = self.env.ref('kro.group_adm_bp').users
+        if len(admins) and self.state in ['defined']:
+            self.current_user_id = admins[0]
+        else:
+            self.current_user_id = self.user_id
 
     @api.one
     @api.depends('job_ids', 'task_ids')
@@ -255,6 +265,7 @@ class Job(models.Model):
     problem_id = fields.Many2one(related='aim_id.problem_id', string=u'Проблема', readonly=True, ondelete="set null")
     project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', readonly=True, ondelete='set null')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
+    current_user_id = fields.Many2one('res.users', compute='_get_responsible', string=u'Ответственный', track_visibility='always', store=True)
     task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания', track_visibility='always')
     task_count = fields.Integer(compute='_task_count', string=u'Количество заданий')
     planned_hours = fields.Float(compute='_time_count', string=u'Запланированно часов всего')
@@ -284,6 +295,15 @@ class Job(models.Model):
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+
+    @api.one
+    @api.depends('state', 'user_id')
+    def _get_responsible(self):
+        admins = self.env.ref('kro.group_adm_bp').users
+        if len(admins) and self.state in ['defined']:
+            self.current_user_id = admins[0]
+        else:
+            self.current_user_id = self.user_id
 
     @api.one
     def _compute_fields(self):

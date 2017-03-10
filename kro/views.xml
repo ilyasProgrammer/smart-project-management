@@ -226,6 +226,7 @@
             </xpath>
             <field name="project_id" position="replace">
                 <field name="project_id" readonly="0"/>
+                <field name="current_user_id"/>
             </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" type="object" name="action_tasks" icon="fa-tasks" context="{'task_ids': task_ids}">
@@ -292,10 +293,27 @@
                 <field name="code"/>
                 <field name="name" string="Название"/>
                 <field name="state"/>
+                <field name="current_user_id"/>
+                <field name="user_id"/>
                 <field name="problem_id"/>
                 <field name="project_id"/>
-                <field name="user_id"/>
             </tree>
+        </field>
+    </record>
+    <record id="kro_aims_search" model="ir.ui.view">
+        <field name="name">kro.aim.search</field>
+        <field name="model">kro.aim</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name" string="Название"/>
+                <field name="state"/>
+                <field name="current_user_id"/>
+                <field name="user_id"/>
+                <field name="problem_id"/>
+                <field name="project_id"/>
+                <filter string="Мои цели" name="my_aims" domain="[('current_user_id','=',uid)]"/>
+            </search>
         </field>
     </record>
     <record id="kro_aim_tasks" model="ir.ui.view">
@@ -357,6 +375,7 @@
         <field name="name">Цели</field>
         <field name="res_model">kro.aim</field>
         <field name="view_mode">tree,calendar,form,gantt8</field>
+        <field name="context">{"search_default_my_aims":1}</field>
         <field name="view_id" ref="kro_aims_tree"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
@@ -434,6 +453,9 @@
                 <field name="create_date" string="Дата регистрации"/>
                 <field name="write_date" string="Изменено"/>
             </field>
+            <field name="project_id" position="before">
+                <field name="current_user_id"/>
+            </field>
             <field name="project_id" position="after">
                 <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
                 <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
@@ -460,8 +482,26 @@
                 <field name="project_id"/>
                 <field name="problem_id"/>
                 <field name="aim_id"/>
+                <field name="current_user_id"/>
                 <field name="user_id"/>
             </tree>
+        </field>
+    </record>
+    <record id="kro_jobs_search" model="ir.ui.view">
+        <field name="name">kro.job.search</field>
+        <field name="model">kro.job</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name" string="Название"/>
+                <field name="state"/>
+                <field name="project_id"/>
+                <field name="problem_id"/>
+                <field name="aim_id"/>
+                <field name="current_user_id"/>
+                <field name="user_id"/>
+                <filter string="Мои задачи" name="my_jobs" domain="[('current_user_id','=',uid)]"/>
+            </search>
         </field>
     </record>
     <record id="kro_jobs_gantt" model="ir.ui.view">
@@ -478,6 +518,7 @@
         <field name="name">Задачи</field>
         <field name="res_model">kro.job</field>
         <field name="view_mode">tree,form,calendar,gantt8</field>
+        <field name="context">{"search_default_my_jobs":1}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Создайте новую задачу.
