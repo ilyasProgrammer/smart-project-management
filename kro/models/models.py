@@ -101,16 +101,19 @@ class Problem(models.Model):
 
     @api.model
     def create(self, vals):
+        subs = []
         addressee = self.env['res.users'].browse(vals['addressee_id'])
         user = self.env['res.users'].browse(vals['user_id'])
         vals['message_follower_ids'] = []
         if addressee.partner_id and addressee != user:
-            vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
+            subs += self.env['mail.followers']._add_follower_command(self._name, [], {addressee.partner_id.id: None}, {}, force=True)[0]
         problem_users = self.env.ref('kro.group_problem_subscribers').users
         if len(problem_users):
             for usr in problem_users:
                 if usr != user:
-                    vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
+                    subs += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
+        unique_subs = make_unique(subs)
+        vals['message_follower_ids'] = unique_subs
         return super(Problem, self).create(vals)
 
     @api.multi
