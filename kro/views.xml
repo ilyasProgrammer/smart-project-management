@@ -248,7 +248,8 @@
                 <field name="create_date" string="Дата регистрации"/>
                 <field name="write_date" string="Изменено"/>
             </field>
-            <field name="project_id" position="after">
+            <field name="project_id" position="replace">
+                <field name="project_id" attrs="{'invisible': [('problem_id', '=', False)]}"/>
                 <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
                 <field name="user_id"/>
             </field>
@@ -456,8 +457,9 @@
             <field name="project_id" position="before">
                 <field name="current_user_id"/>
             </field>
-            <field name="project_id" position="after">
-                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
+            <field name="project_id" position="replace">
+                <field name="project_id" attrs="{'invisible': [('aim_id', '=', False)]}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>
                 <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
              <field name="user_id" position="replace">
@@ -561,10 +563,11 @@
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="project_id" attrs="{'invisible': ['|',('job_aim_id', '=', False),('project_id', '=', False)]}"/>
                     <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
-                    <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>-->
-                    <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>
+                    <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>-->
+                    <!--<field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>-->
+                    <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}"/>
                     <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
-                    <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}" attrs="{'invisible': [('job_aim_id', '=', False)],'readonly': [('planner', '=', False)]}"/>
+                    <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}"/>
                 </group>
                 <group>
                     <group>

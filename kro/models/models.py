@@ -129,7 +129,7 @@ class Aim(models.Model):
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     problem_id = fields.Many2one('kro.problem', u'Проблема', ondelete='set null')
-    project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', ondelete='set null')
+    project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', ondelete='set null', readonly=True)
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
     reason_aside_problem = fields.Many2one('kro.problem', u'Причина откладывания - проблема', select=True, ondelete='set null', track_visibility='always')
     reason_aside_aim = fields.Many2one('kro.aim', u'Причина откладывания - цель', select=True, ondelete='set null', track_visibility='always')
@@ -261,7 +261,7 @@ class Job(models.Model):
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
     date_end = fields.Date(string=u'Дата завершения', compute='_time_count', store=True)
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='always')
-    aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', readonly=True, track_visibility='always')
+    aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', track_visibility='always')
     problem_id = fields.Many2one(related='aim_id.problem_id', string=u'Проблема', readonly=True, ondelete="set null")
     project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', readonly=True, ondelete='set null')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
@@ -317,6 +317,17 @@ class Job(models.Model):
             self.planner = True
         if self._uid == self.user_id.id:
             self.planner = True
+
+    @api.model
+    def default_get(self, fields):
+        res = super(Job, self).default_get(fields)
+        res['manager'] = True
+        res['admin'] = True
+        res['planner'] = True
+        res['executor'] = True
+        res['predicator'] = True
+        res['approver'] = True
+        return res
 
     @api.one
     def _task_count(self):
@@ -382,11 +393,11 @@ class Task(models.Model):
     amount = fields.Float(u'Бюджет', track_visibility='onchange')
     mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса', track_visibility='onchange')
     mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
-    job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null")
-    aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null")
-    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель задачи', readonly=True)
-    problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
     project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True)
+    problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
+    aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null")
+    job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null")
+    job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель задачи')
     required_result = fields.Text(u'Требуемый результат', track_visibility='onchange')
     priority = fields.Selection([('0', u'Низкий'), ('1', u'Средний'), ('2', u'Высокий')], u'Приоритет', select=True, track_visibility='onchange')
     user_executor_id = fields.Many2one('res.users', string=u'Исполнитель', ondelete="set null", track_visibility='onchange')
