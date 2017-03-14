@@ -562,7 +562,7 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <field name="kanban_state" position="after">
-                <label for="private" string="Приватная"/>
+                <label for="private" string="Приватное"/>
                 <field name="private"/>
             </field>
             <button name="toggle_active" position="before">

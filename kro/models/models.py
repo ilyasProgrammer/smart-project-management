@@ -14,6 +14,8 @@ class Project(models.Model):
 class Problem(models.Model):
     _name = 'kro.problem'
     _inherit = 'project.task'
+    _description = u"Проблема"
+    _display_name = u"Проблема"
     name = fields.Char(string=u'Наименование',track_visibility='onchange', size=128, required=True, select=True)
     kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
     date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False, track_visibility='always')
@@ -54,6 +56,12 @@ class Problem(models.Model):
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
     private = fields.Boolean(default=False, string=u'Приватный')
+
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        result = super(Problem, self)._message_notification_recipients(message, recipients)
+        result['group_project_user']['button_access']['title'] = u'Открыть проблему'
+        return result
 
     @api.one
     @api.depends('state', 'addressee_id', 'user_id')
@@ -101,6 +109,29 @@ class Problem(models.Model):
     def _hours_get(self, ids):
         return
 
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'user_id' in init_values and self.user_id:  # assigned -> new
+            return 'kro.mt_problem_new'
+        return super(Problem, self)._track_subtype(init_values)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(Problem, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'kro.action_problems')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('Новая проблема')})
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
+
     @api.model
     def create(self, vals):
         if vals['kro_project_id']:
@@ -116,7 +147,8 @@ class Problem(models.Model):
         if len(problem_users):
             for usr in problem_users:
                 if usr != user:
-                    subs += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
+                    pass
+                    # subs += self.env['mail.followers']._add_follower_command(self._name, [], {usr.partner_id.id: None}, {}, force=True)[0]
         unique_subs = make_unique(subs)
         vals['message_follower_ids'] = unique_subs
         return super(Problem, self).create(vals)
@@ -129,6 +161,7 @@ class Problem(models.Model):
 class Aim(models.Model):
     _name = 'kro.aim'
     _inherit = 'project.task'
+    _description = u"Цель"
     _order = 'code'
     code = fields.Char(string=u'Цель № ', required=True, default="/")
     date_start = fields.Date(string=u'Дата начала', compute='_time_count', store=True)
@@ -164,6 +197,12 @@ class Aim(models.Model):
          _('The code must be unique!')),
     ]
     private = fields.Boolean(default=False, string=u'Приватный')
+
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        result = super(Aim, self)._message_notification_recipients(message, recipients)
+        result['group_project_user']['button_access']['title'] = u'Открыть цель'
+        return result
 
     @api.one
     @api.depends('state', 'user_id')
@@ -241,6 +280,28 @@ class Aim(models.Model):
         return
 
     @api.model
+    def _track_subtype(self, init_values):
+        if 'user_id' in init_values and self.user_id:  # assigned -> new
+            return 'kro.mt_aim_new'
+        return super(Aim, self)._track_subtype(init_values)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(Aim, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'kro.action_aims')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('Новая цель')})
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
+
+    @api.model
     def create(self, vals):
         if vals['problem_id']:
             problem = self.env['kro.problem'].browse(vals['problem_id'])
@@ -306,6 +367,12 @@ class Job(models.Model):
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
     private = fields.Boolean(default=False, string=u'Приватный')
 
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        result = super(Job, self)._message_notification_recipients(message, recipients)
+        result['group_project_user']['button_access']['title'] = u'Открыть задачу'
+        return result
+
     @api.one
     @api.depends('state', 'user_id')
     def _get_responsible(self):
@@ -366,6 +433,13 @@ class Job(models.Model):
     def _hours_get(self, ids):
         return
 
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'user_id' in init_values and self.user_id:  # assigned -> new
+            return 'kro.mt_job_new'
+        return super(Job, self)._track_subtype(init_values)
+
     @api.model
     def create(self, vals):
         if vals['aim_id']:
@@ -385,6 +459,22 @@ class Job(models.Model):
     @api.multi
     def get_formview_id(self):
         return self.env.ref('kro.kro_job_form').id
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(Job, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'kro.action_job')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('Новая задача')})
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
 
 
 class Task(models.Model):
@@ -443,6 +533,12 @@ class Task(models.Model):
     admin = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     doc_count = fields.Integer(compute='_get_attached_docs', string="Количество прикрепленных вложений")
     private = fields.Boolean(default=False, string=u'Приватный')
+
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        result = super(Task, self)._message_notification_recipients(message, recipients)
+        result['group_project_user']['button_access']['title'] = u'Открыть задание'
+        return result
 
     @api.one
     @api.depends('state', 'user_executor_id', 'user_predicator_id', 'user_approver_id', 'user_id')
@@ -592,6 +688,21 @@ class Task(models.Model):
     def _store_history(self, ids):
         return True
 
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(Task, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'kro.kro_actions_view_taskss')
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, action_id=new_action_id)
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('Новое задание')})
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
 
 def make_unique(original_list):
     if not len(original_list):
