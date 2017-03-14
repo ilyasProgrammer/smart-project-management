@@ -243,7 +243,7 @@ class Aim(models.Model):
     @api.model
     def create(self, vals):
         if vals['problem_id']:
-            problem = self.env['project.project'].browse(vals['problem_id'])
+            problem = self.env['kro.problem'].browse(vals['problem_id'])
             vals['private'] = problem.private
         if vals.get('code', '/') == '/':
             vals['code'] = self.env['ir.sequence'].next_by_code('kro.aim')
@@ -369,7 +369,7 @@ class Job(models.Model):
     @api.model
     def create(self, vals):
         if vals['aim_id']:
-            aim = self.env['project.project'].browse(vals['aim_id'])
+            aim = self.env['kro.aim'].browse(vals['aim_id'])
             vals['private'] = aim.private
         if vals.get('code', '/') == '/':
             vals['code'] = self.env['ir.sequence'].next_by_code('kro.job')
@@ -560,7 +560,7 @@ class Task(models.Model):
     @api.model
     def create(self, vals):
         if vals['job_id']:
-            job = self.env['project.project'].browse(vals['job_id'])
+            job = self.env['kro.job'].browse(vals['job_id'])
             vals['private'] = job.private
         subs = []
         user = self.env['res.users'].browse(vals['user_id'])
