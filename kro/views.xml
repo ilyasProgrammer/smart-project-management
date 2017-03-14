@@ -9,6 +9,9 @@
         <field name="priority" eval="256"/>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <field name="privacy_visibility" position="after">
+                <field name="private"/>
+            </field>
             <field name="use_tasks" position="replace">
                 <field name="use_tasks" invisible="1"/>
             </field>
@@ -57,6 +60,10 @@
         <field name="model">kro.problem</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="kanban_state" position="after">
+                <label for="private" string="Приватная"/>
+                <field name="private"/>
+            </field>
             <field name="name" position="replace">
                 <field name="planner" invisible="1"/>
                 <field name="obs" invisible="1"/>
@@ -204,6 +211,10 @@
         <field name="priority" eval="256" />
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="kanban_state" position="after">
+                <label for="private" string="Приватная"/>
+                <field name="private"/>
+            </field>
             <field name="tag_ids" position="replace">
                 <field name="planned_hours"/>
                 <field name="total_time"/>
@@ -405,6 +416,10 @@
         <field name="mode">extension</field>
         <field name="priority" eval="32"/>
         <field name="arch" type="xml">
+            <field name="kanban_state" position="after">
+                <label for="private" string="Приватная"/>
+                <field name="private"/>
+            </field>
             <field name="tag_ids" position="replace">
                 <field name="planner" invisible="1"/>
                 <field name="obs" invisible="1"/>
@@ -546,6 +561,10 @@
         <field eval="258" name="priority"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
+            <field name="kanban_state" position="after">
+                <label for="private" string="Приватная"/>
+                <field name="private"/>
+            </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                     <field string="Документы" name="doc_count" widget="statinfo"/>

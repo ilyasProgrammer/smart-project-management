@@ -8,6 +8,7 @@ class Project(models.Model):
     _inherit = 'project.project'
     problem_ids = fields.One2many('kro.problem', 'kro_project_id', ondelete='set null',  string=u'Проблемы')
     use_tasks = fields.Boolean(default=False)
+    private = fields.Boolean(default=False, string=u'Приватный')
 
 
 class Problem(models.Model):
@@ -52,6 +53,7 @@ class Problem(models.Model):
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    private = fields.Boolean(default=False, string=u'Приватный')
 
     @api.one
     @api.depends('state', 'addressee_id', 'user_id')
@@ -101,6 +103,9 @@ class Problem(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals['kro_project_id']:
+            project = self.env['project.project'].browse(vals['kro_project_id'])
+            vals['private'] = project.private
         subs = []
         addressee = self.env['res.users'].browse(vals['addressee_id'])
         user = self.env['res.users'].browse(vals['user_id'])
@@ -158,6 +163,7 @@ class Aim(models.Model):
         ('kro_aim_unique_code', 'UNIQUE (code)',
          _('The code must be unique!')),
     ]
+    private = fields.Boolean(default=False, string=u'Приватный')
 
     @api.one
     @api.depends('state', 'user_id')
@@ -236,6 +242,9 @@ class Aim(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals['problem_id']:
+            problem = self.env['project.project'].browse(vals['problem_id'])
+            vals['private'] = problem.private
         if vals.get('code', '/') == '/':
             vals['code'] = self.env['ir.sequence'].next_by_code('kro.aim')
         return super(Aim, self).create(vals)
@@ -295,6 +304,7 @@ class Job(models.Model):
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False)
     planner = fields.Boolean(compute='_compute_fields', default=False, store=False)
     obs = fields.Boolean(compute='_compute_fields', default=False, store=False)
+    private = fields.Boolean(default=False, string=u'Приватный')
 
     @api.one
     @api.depends('state', 'user_id')
@@ -358,6 +368,9 @@ class Job(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals['aim_id']:
+            aim = self.env['project.project'].browse(vals['aim_id'])
+            vals['private'] = aim.private
         if vals.get('code', '/') == '/':
             vals['code'] = self.env['ir.sequence'].next_by_code('kro.job')
         return super(Job, self).create(vals)
@@ -429,6 +442,7 @@ class Task(models.Model):
     manager = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     admin = fields.Boolean(compute='_compute_fields', default=False, store=False, readonly=True)
     doc_count = fields.Integer(compute='_get_attached_docs', string="Количество прикрепленных вложений")
+    private = fields.Boolean(default=False, string=u'Приватный')
 
     @api.one
     @api.depends('state', 'user_executor_id', 'user_predicator_id', 'user_approver_id', 'user_id')
@@ -545,6 +559,9 @@ class Task(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals['job_id']:
+            job = self.env['project.project'].browse(vals['job_id'])
+            vals['private'] = job.private
         subs = []
         user = self.env['res.users'].browse(vals['user_id'])
         if vals.get('user_executor_id', False):

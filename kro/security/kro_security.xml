@@ -55,5 +55,75 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record model="ir.rule" id="project_visibility_rule_obs">
+        <field name="name">Видимость проект для наблюдателей</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="domain_force">
+            [
+                ('private', '=', False)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_obs')),(4,ref('group_project_obs_max'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.rule" id="problem_visibility_rule_obs">
+        <field name="name">Видимость проблем для наблюдателей</field>
+        <field name="model_id" ref="model_kro_problem"/>
+        <field name="domain_force">
+            [
+                ('private', '=', False)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_obs')),(4,ref('group_project_obs_max'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.rule" id="aim_visibility_rule_obs">
+        <field name="name">Видимость целей для наблюдателей</field>
+        <field name="model_id" ref="model_kro_aim"/>
+        <field name="domain_force">
+            [
+                ('private', '=', False)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_obs')),(4,ref('group_project_obs_max'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.rule" id="job_visibility_rule_obs">
+        <field name="name">Видимость задач для наблюдателей</field>
+        <field name="model_id" ref="model_kro_job"/>
+        <field name="domain_force">
+            [
+                ('private', '=', False)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_obs')),(4,ref('group_project_obs_max'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.rule" id="task_visibility_rule_obs">
+        <field name="name">Видимость заданий для наблюдателей</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">
+            [
+                ('private', '=', False)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_obs')),(4,ref('group_project_obs_max'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 </data>
 </openerp>
