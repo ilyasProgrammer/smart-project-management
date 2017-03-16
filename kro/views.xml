@@ -10,12 +10,16 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <field name="privacy_visibility" position="after">
+                <field name="project_id"/>
                 <field name="private"/>
             </field>
             <field name="use_tasks" position="replace">
                 <field name="use_tasks" invisible="1"/>
             </field>
             <notebook position="inside">
+                <page string="Дочерние проекты">
+                    <field name="project_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.view_kro_project_form'}"/>
+                </page>
                 <page string="Проблемы">
                     <field name="problem_ids" nolabel="1" widget="many2many_list" mode="tree" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
                 </page>
@@ -60,15 +64,20 @@
         <field name="model">kro.problem</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <field name="kanban_state" position="after">
-                <label for="private" string="Приватная"/>
+            <field name="kanban_state" position="replace">
                 <field name="private"/>
-            </field>
-            <field name="name" position="replace">
+                <label for="private" string="Приватная"/>
                 <field name="planner" invisible="1"/>
                 <field name="obs" invisible="1"/>
-                <field name="name" placeholder="Заголовок проблемы ..." attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
+            <xpath expr="//sheet//h1" position="replace">
+                <h4 class="o_row">
+                    <field name="priority" widget="priority" nolabel="1"/>
+                </h4>
+                <h3>
+                    <field name="name" placeholder="Заголовок проблемы ..." nolabel="1" attrs="{'readonly': [('planner', '=', False)]}"/>
+                </h3>
+            </xpath>
             <field name="user_id" position="replace">
                 <field name="user_id" attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
@@ -211,9 +220,9 @@
         <field name="priority" eval="256" />
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <field name="kanban_state" position="after">
-                <label for="private" string="Приватная"/>
+            <field name="kanban_state" position="replace">
                 <field name="private"/>
+                <label for="private" string="Приватная"/>
             </field>
             <field name="tag_ids" position="replace">
                 <field name="planned_hours"/>
@@ -416,10 +425,20 @@
         <field name="mode">extension</field>
         <field name="priority" eval="32"/>
         <field name="arch" type="xml">
-            <field name="kanban_state" position="after">
-                <label for="private" string="Приватная"/>
+            <field name="kanban_state" position="replace">
                 <field name="private"/>
+                <label for="private" string="Приватная"/>
             </field>
+            <xpath expr="//sheet//h1" position="replace">
+                <h4 class="o_row">
+                    <field name="priority" widget="priority" nolabel="1"/>
+                    <span> Задача № </span>
+                    <field name="code" attrs="{'readonly': [('planner', '=', False)]}"/>
+                </h4>
+                <h3>
+                    <field name="name" placeholder="Заголовок задачи ..." nolabel="1" attrs="{'readonly': [('planner', '=', False)]}"/>
+                </h3>
+            </xpath>
             <field name="tag_ids" position="replace">
                 <field name="planner" invisible="1"/>
                 <field name="obs" invisible="1"/>
@@ -434,12 +453,12 @@
             <field name="planned_hours" position="replace">
                 <field name="planned_hours" invisible="1"/>
             </field>
-            <field name="name" position="replace">
-                <label string="Задача № " class="oe_inline"/>
-                <field name="code" class="oe_inline" attrs="{'readonly': [('planner', '=', False)]}"/>
-                <label string=" - " class="oe_inline"/>
-                <field name="name" placeholder="Заголовок задачи ..."/>
-            </field>
+            <!--<field name="name" position="replace">-->
+                <!--<label string="Задача № " class="oe_inline"/>-->
+                <!--<field name="code" class="oe_inline" attrs="{'readonly': [('planner', '=', False)]}"/>-->
+                <!--<label string=" - " class="oe_inline"/>-->
+                <!--<field name="name" placeholder="Заголовок задачи ..."/>-->
+            <!--</field>-->
             <page name='description_page' position="before">
                 <field name="message_needaction" invisible="1"/>
                 <page string="Задания">
@@ -561,32 +580,43 @@
         <field eval="258" name="priority"/>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
-            <field name="kanban_state" position="after">
-                <label for="private" string="Приватное"/>
-                <field name="private"/>
-            </field>
-            <button name="toggle_active" position="before">
-                <button class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
-                    <field string="Документы" name="doc_count" widget="statinfo"/>
-                </button>
-                <button class="oe_stat_button" type="object" name="action_move_time" icon="fa-clock-o" string="Пересчитать связанные"/>
+            <field name="kanban_state" position="replace">
                 <field name="executor" invisible="1"/>
                 <field name="predicator" invisible="1"/>
                 <field name="approver" invisible="1"/>
                 <field name="planner" invisible="1"/>
                 <field name="admin" invisible="1"/>
+                <field name="private"/>
+                <label for="private" string="Приватное"/>
+            </field>
+            <xpath expr="//sheet//h1" position="replace">
+                <h4 class="o_row">
+                    <field name="priority" widget="priority" nolabel="1"/>
+                    <span> Задание № </span>
+                    <field name="code" attrs="{'readonly': [('planner', '=', False)]}"/>
+                </h4>
+                <h3>
+                    <field name="name" placeholder="Заголовок задания ..." nolabel="1" attrs="{'readonly': [('planner', '=', False)]}"/>
+                </h3>
+            </xpath>
+            <button name="toggle_active" position="before">
+                <button class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
+                    <field string="Документы" name="doc_count" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" type="object" name="action_move_time" icon="fa-clock-o" string="Пересчитать связанные"/>
             </button>
             <xpath expr="//sheet//group/group/field[@name='tag_ids']/../.." position="replace">
                 <group>
                     <field name="current_user_id"/>
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="project_id" attrs="{'invisible': ['|',('job_aim_id', '=', False),('project_id', '=', False)]}"/>
+                    <field name="parent_project_id" invisible="1"/>
                     <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
                     <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>-->
                     <!--<field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>-->
                     <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
                     <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
-                    <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}"/>
+                    <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
                 </group>
                 <group>
                     <group>
@@ -603,10 +633,6 @@
                     </group>
                 </group>
             </xpath>
-            <field name="name" position="replace">
-                <!--<field name="name" placeholder="Заголовок задания ..." attrs="{'readonly': [('planner', '=', False)]}"/>-->
-                <field name="name" placeholder="Заголовок задания ..." />
-            </field>
             <field name="stage_id" position="replace">
                 <!--<field name="state" widget="statusbar" attrs="{'clickable': [('planner', '=', True),('admin', '=', True)]}"/>-->
                 <field name="state" widget="statusbar" clickable="True"/>
@@ -735,6 +761,7 @@
                 <field name="tag_ids"/>
                 <field name="partner_id"/>
                 <field name="project_id"/>
+                <field name="parent_project_id" invisible="1"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
                 <filter string="Мои задания" name="my_tasks" domain="[('current_user_id','=',uid)]"/>
@@ -853,7 +880,11 @@
         <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
     <!--МЕНЮ-->
-    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="kro_proj_menu" sequence="1" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
+    <menuitem id="project.menu_project_config" name="Configuration" parent="base.menu_main_pm" sequence="100" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
+    <menuitem id="base.menu_project_general_settings" name="Settings" parent="project.menu_project_config" sequence="0" action="project.action_config_settings" groups="base.group_configuration"/>
+    <menuitem action="project.open_view_project_all_config" id="project.menu_projects_config" name="Projects" parent="project.menu_project_config" sequence="10" groups="base.group_configuration"/>
+    <menuitem id="project.menu_tasks_config" name="GTD" parent="project.menu_project_config" sequence="2" groups="base.group_configuration"/>
+    <menuitem id='menu_kro_projects' action="action_projects" name="Проекты" parent="project.menu_project_config" sequence="1" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_problems' action="action_problems" name="Проблемы" parent="kro_proj_menu" sequence="2" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>

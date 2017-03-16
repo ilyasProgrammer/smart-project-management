@@ -18,7 +18,7 @@
         'security/kro_security.xml',
         'security/ir.model.access.csv',
         'views.xml',
-        'data.xml',
+        'data/data.xml',
         'data/task_sequence.xml',
     ],
     'demo': [

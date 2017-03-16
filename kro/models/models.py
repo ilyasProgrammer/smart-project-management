@@ -9,6 +9,8 @@ class Project(models.Model):
     problem_ids = fields.One2many('kro.problem', 'kro_project_id', ondelete='set null',  string=u'Проблемы')
     use_tasks = fields.Boolean(default=False)
     private = fields.Boolean(default=False, string=u'Приватный')
+    project_id = fields.Many2one('project.project', u'Проект родитель', ondelete="set null")
+    project_ids = fields.One2many('project.project', 'project_id', ondelete="set null")
 
 
 class Problem(models.Model):
@@ -482,6 +484,7 @@ class Task(models.Model):
     _description = u'Задание'
     description = fields.Html(u'Описание', track_visibility='always')
     # date_start_ex = fields.Datetime(u'Старт') используем date_start для гантта
+    code = fields.Char(string=u'Номер', required=True, default="/")
     date_end = fields.Date(compute='_set_date_end', track_visibility='always')
     date_start = fields.Date(u'Исполнитель дата начала', track_visibility='always')
     date_end_ex = fields.Date(u'Исполнитель дата окончания', track_visibility='onchange')
@@ -497,6 +500,7 @@ class Task(models.Model):
     mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса', track_visibility='onchange')
     mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
     project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True)
+    parent_project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id.project_id', string=u'Проект родитель', readonly=True)
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True)
     aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null")
     job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null")
@@ -571,7 +575,8 @@ class Task(models.Model):
             self.executor = True
             self.predicator = True
             self.approver = True
-        if self._uid == self.user_id.id or self.manager:
+            self.planner = True
+        if self._uid == self.user_id.id:
             self.planner = True
         if self._uid == self.user_executor_id.id or self.planner:
             self.executor = True
