@@ -709,6 +709,7 @@ class Task(models.Model):
         }
         return res
 
+
 def make_unique(original_list):
     if not len(original_list):
         return []

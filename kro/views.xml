@@ -422,7 +422,6 @@
         <field name="model">kro.job</field>
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="active">True</field>
-        <field name="mode">extension</field>
         <field name="priority" eval="32"/>
         <field name="arch" type="xml">
             <field name="kanban_state" position="replace">

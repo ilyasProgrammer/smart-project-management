@@ -125,5 +125,40 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record model="ir.rule" id="attachment_delete_creator">
+        <field name="name">Удалять вложение может только его создатель</field>
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <field name="domain_force">
+            [
+                ('create_uid', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4,ref('group_project_aim')),
+                                    (4,ref('group_project_obs')),
+                                    (4,ref('group_project_obs_max')),
+                                    (4,ref('project.group_project_user'))]"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.rule" id="attachment_all_can_see">
+        <field name="name">Все могут видеть и изменять вложения</field>
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <field name="groups" eval="[(4,ref('group_project_aim')),
+                                    (4,ref('group_project_obs')),
+                                    (4,ref('group_project_obs_max')),
+                                    (4,ref('project.group_project_user'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.rule" id="attachment_admin">
+        <field name="name">Куратор может все во вложениях</field>
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
 </data>
 </openerp>
