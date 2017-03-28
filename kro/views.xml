@@ -612,7 +612,7 @@
                     <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>-->
                     <!--<field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>-->
                     <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
-                    <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
+                    <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': [('job_id', '=', False)],'readonly': [('planner', '=', False)]}"/>
                     <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
                 </group>
                 <group>
