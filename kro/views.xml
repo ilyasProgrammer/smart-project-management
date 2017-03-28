@@ -244,10 +244,6 @@
             </xpath>
             <xpath expr="//sheet//group/group/field[@name='project_id']/../.." position="before">
             </xpath>
-            <field name="project_id" position="replace">
-                <field name="project_id" readonly="0"/>
-                <field name="current_user_id"/>
-            </field>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" type="object" name="action_tasks" icon="fa-tasks" context="{'task_ids': task_ids}">
                     <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
@@ -269,9 +265,11 @@
                 <field name="write_date" string="Изменено"/>
             </field>
             <field name="project_id" position="replace">
-                <field name="project_id" attrs="{'invisible': [('problem_id', '=', False)]}"/>
-                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}"/>
+                <field name="project_id" attrs="{'invisible': [('problem_id', '!=', False)]}"/>
+                <field name="problem_project_id" attrs="{'invisible': [('problem_id', '=', False)]}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('project_id', '!=', False)]}"/>
                 <field name="user_id"/>
+                <field name="current_user_id"/>
             </field>
             <page name="description_page" position="before">
                 <page string="Задачи">
@@ -798,6 +796,14 @@
             </p>
         </field>
     </record>
+    <record id="kro_actions_view_taskss_tree" model="ir.actions.act_window">
+        <field name="name">Задания</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_task_tree"/>
+        <field name="search_view_id" ref="view_task_search_form"/>
+        <field name="context">{"search_default_my_tasks":1}</field>
+    </record>
     <record id="view_calendar_form" model="ir.ui.view">
         <field name="name">calendar.event.inherit</field>
         <field name="model">calendar.event</field>
@@ -888,6 +894,7 @@
     <menuitem id='menu_kro_aims' action="action_aims" name="Цели" parent="kro_proj_menu" sequence="3" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
+    <menuitem id='menu_kro_tasks_tree' action="kro_actions_view_taskss_tree" string="Задания-список" name="Задания-список" parent="kro_proj_menu" sequence="6"/>
     <menuitem id="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
 
 </data>
