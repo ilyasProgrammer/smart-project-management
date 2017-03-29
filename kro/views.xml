@@ -265,7 +265,7 @@
                 <field name="write_date" string="Изменено"/>
             </field>
             <field name="project_id" position="replace">
-                <field name="project_id" attrs="{'invisible': [('problem_id', '!=', False)]}"/>
+                <field name="project_id" attrs="{'invisible': [('problem_id', '!=', False),('project_id', '=', False)]}"/>
                 <field name="problem_project_id" attrs="{'invisible': [('problem_id', '=', False)]}"/>
                 <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('project_id', '!=', False)]}"/>
                 <field name="user_id"/>
@@ -605,14 +605,16 @@
             <xpath expr="//sheet//group/group/field[@name='tag_ids']/../.." position="replace">
                 <group>
                     <field name="current_user_id"/>
-                    <field name="analytic_account_id" invisible="1"/>
-                    <field name="project_id" attrs="{'invisible': ['|',('job_aim_id', '=', False),('project_id', '=', False)]}"/>
+                    <field name="project_id" invisible="1"/>
                     <field name="parent_project_id" invisible="1"/>
-                    <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('problem_id', '=', False)]}"/>
+                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="problem_project_id" attrs="{'invisible': ['|',('problem_id', '=', False),('aim_project_id', '!=', False)]}"/>
+                    <field name="aim_project_id" attrs="{'invisible': [('aim_project_id', '=', False)]}"/>
+                    <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('problem_id', '=', False)]}"/>
                     <!--<field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False),('aim_id', '=', False)]}"/>-->
                     <!--<field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '=', False),('aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>-->
                     <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': ['|',('job_aim_id', '!=', False)],'readonly': [('planner', '=', False)]}"/>
-                    <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': [('job_id', '=', False)],'readonly': [('planner', '=', False)]}"/>
+                    <field name="job_aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'invisible': [('job_id', '=', False)]}"/>
                     <field name="job_id" context="{'form_view_ref': 'kro.kro_job_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
                 </group>
                 <group>
@@ -757,7 +759,7 @@
                 <field name="name" string="Tasks"/>
                 <field name="tag_ids"/>
                 <field name="partner_id"/>
-                <field name="project_id"/>
+                <field name="problem_project_id"/>
                 <field name="parent_project_id" invisible="1"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
