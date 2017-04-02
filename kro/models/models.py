@@ -390,9 +390,9 @@ class Job(models.Model):
         self.admin = False
         self.manager = False
         self.planner = False
-        self.obs = False
         self.manager = True if self._uid in [r.id for r in self.env.ref('project.group_project_manager').users] else False
         self.admin = True if self._uid in [r.id for r in self.env.ref('kro.group_adm_bp').users] else False
+        self.obs = True if self._uid in [r.id for r in self.env.ref('kro.group_project_obs_max').users] or self._uid in [r.id for r in self.env.ref('kro.group_project_obs').users] else False
         if self.admin or self.manager:
             self.planner = True
         if self._uid == self.user_id.id:
@@ -505,7 +505,7 @@ class Task(models.Model):
     job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True, help=u'Цель из задачи')
     aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null" , help=u'Цель для прямой привязки минуя задачу')
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True, help=u'Проблема из цели из родительской задачи')
-    problem_project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True, help=u'Проект из преблемы из цели из родительской задачи')
+    problem_project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True, help=u'Проект из проблемы из цели из родительской задачи')
     aim_project_id = fields.Many2one(related='job_aim_id.project_id', string=u'Проект', readonly=True, help=u'Проект из цели из родительской задачи (привязанный непосредственно к цели проект минуя проблему)')
     parent_project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id.project_id', string=u'Проект родитель', readonly=True, help=u'Проект родитель проекта из проблемы из цели из родительской задачи')
 

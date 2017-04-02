@@ -459,7 +459,7 @@
             <page name='description_page' position="before">
                 <field name="message_needaction" invisible="1"/>
                 <page string="Задания">
-                    <field name="task_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'message_needaction':False, 'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False)]}">
+                    <field name="task_ids" nolabel="1" widget="one2many_list" mode="tree" context="{'message_needaction':False, 'form_view_ref': 'project.view_task_form2'}" attrs="{'readonly': [('planner', '=', False),('obs', '=', False)]}">
                         <tree string="Задания">
                             <field name="name"/>
                             <field name="state"/>

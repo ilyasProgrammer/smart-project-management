@@ -24,7 +24,7 @@ d3,d3,model_kro_job,group_project_aim,1,1,1,0
 d4,d4,project.model_project_task,group_project_aim,1,1,1,0
 d5,d5,project.model_project_project,group_project_aim,1,1,1,0
 
-e0,e0,project.model_project_task_history,group_project_obs,1,0,0,0
+e0,e0,project.model_project_task_history,group_project_obs,1,0,1,0
 e1,e1,model_kro_problem,group_project_obs,1,1,1,0
 e2,e2,model_kro_aim,group_project_obs,1,0,1,0
 e3,e3,model_kro_job,group_project_obs,1,1,1,0
