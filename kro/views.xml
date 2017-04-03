@@ -491,7 +491,7 @@
             <field name="project_id" position="replace">
                 <field name="aim_project_id" attrs="{'invisible': [('aim_id', '=', False)]}"/>
                 <field name="project_id" attrs="{'invisible': [('problem_id', '=', False)]}"/>
-                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('aim_id', '=', False)]}"/>
+                <field name="problem_id" context="{'form_view_ref': 'kro.kro_problem_form'}" attrs="{'invisible': [('problem_id', '=', False)]}"/>
                 <field name="aim_id" context="{'form_view_ref': 'kro.kro_aim_form'}" attrs="{'readonly': [('planner', '=', False)]}"/>
             </field>
              <field name="user_id" position="replace">
