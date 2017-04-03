@@ -669,6 +669,7 @@ class Task(models.Model):
             job = self.env['kro.job'].browse(vals['job_id'])
             vals['private'] = job.private
         subs = []
+        vals['user_id'] = self._uid
         user = self.env['res.users'].browse(vals['user_id'])
         if vals.get('user_executor_id', False):
             executor = self.env['res.users'].browse(vals['user_executor_id'])
