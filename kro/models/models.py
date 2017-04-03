@@ -337,6 +337,7 @@ class Job(models.Model):
     aim_id = fields.Many2one('kro.aim', u'Цель', ondelete='set null', track_visibility='always')
     problem_id = fields.Many2one(related='aim_id.problem_id', string=u'Проблема', readonly=True, ondelete="set null")
     project_id = fields.Many2one(related='problem_id.kro_project_id', string=u'Проект', readonly=True, ondelete='set null')
+    aim_project_id = fields.Many2one(related='aim_id.project_id', string=u'Проект', readonly=True, ondelete='set null', help='Проект напрямую привязанный к цели')
     user_id = fields.Many2one('res.users', u'Ответственный за планирование', select=True, track_visibility='onchange', ondelete="set null")
     current_user_id = fields.Many2one('res.users', compute='_get_responsible', string=u'Ответственный', track_visibility='always', store=True)
     task_ids = fields.One2many('project.task', 'job_id', ondelete="cascade", string=u'Задания', track_visibility='always')
