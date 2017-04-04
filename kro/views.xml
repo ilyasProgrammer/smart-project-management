@@ -899,6 +899,5 @@
     <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
     <menuitem id='menu_kro_tasks_tree' action="kro_actions_view_taskss_tree" string="Задания-список" name="Задания-список" parent="kro_proj_menu" sequence="6"/>
     <menuitem id="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
-
 </data>
 </openerp>
