@@ -13,6 +13,7 @@
         'project_gantt8',
         'project_timesheet',
         'mail',
+        'document_page',
                 ],
     'data': [
         'security/kro_security.xml',

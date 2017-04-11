@@ -45,3 +45,10 @@ g2,g2,base.model_ir_attachment,group_project_aim,1,1,1,0
 g3,g3,base.model_ir_attachment,group_project_obs,1,1,1,0
 g4,g4,base.model_ir_attachment,group_project_obs_max,1,1,1,0
 g5,g5,base.model_ir_attachment,group_problem_subscribers,1,1,1,0
+
+h0,h0,document_page.model_document_page,project.group_project_user,1,1,1,0
+h1,h1,document_page.model_document_page,project.group_project_manager,1,1,1,0
+h2,h2,document_page.model_document_page,group_project_aim,1,1,1,0
+h3,h3,document_page.model_document_page,group_project_obs,1,1,1,0
+h4,h4,document_page.model_document_page,group_project_obs_max,1,1,1,0
+h5,h5,document_page.model_document_page,group_problem_subscribers,1,1,1,0

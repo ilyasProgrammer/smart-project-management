@@ -366,7 +366,6 @@ class Post(models.Model):
     def _get_has_validated_answer(self):
         self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
 
-
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
