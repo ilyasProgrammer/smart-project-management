@@ -2,6 +2,7 @@
 {
     'name': "kro project",
     'description': """KRO PROJECT""",
+    'summary': """{SHORT_DESCRIPTION_OF_THE_MODULE}""",
     'author': "Ilyas",
     'website': "https://github.com/ilyasProgrammer",
     'category': 'Project',
