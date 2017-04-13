@@ -18,7 +18,7 @@ class Problem(models.Model):
     _inherit = 'project.task'
     _description = u"Проблема"
     _display_name = u"Проблема"
-    name = fields.Char(string=u'Наименование',track_visibility='onchange', size=128, required=True, select=True)
+    name = fields.Char(string=u'Наименование', track_visibility='onchange', size=128, required=True, select=True)
     kro_project_id = fields.Many2one('project.project', u'Проект', readonly=True, ondelete="set null")
     date_deadline = fields.Date(u'Плановая дата решения', select=True, copy=False, track_visibility='always')
     fact_date = fields.Date(u'Фактическая дата', select=True, track_visibility='always')
@@ -104,8 +104,8 @@ class Problem(models.Model):
     @api.model
     def _store_history(self, ids):
         if 1:
-            return False
-        return True
+            return ids
+        return ids
 
     @api.model
     def _hours_get(self, ids):
@@ -244,7 +244,7 @@ class Aim(models.Model):
     @api.model
     def action_tasks(self, active_id):
         search_view = self.env['ir.model.data'].get_object_reference('kro', 'kro_aim_all_tasks')
-        view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_aims_task_search_form')
+        # view_id = self.env['ir.model.data'].get_object_reference('kro', 'kro_aims_task_search_form')
         aim = self.env['kro.aim'].browse(active_id)
         job_tasks_ids = []
         for r in aim.job_ids:
@@ -499,12 +499,12 @@ class Task(models.Model):
     plan_time_ap = fields.Float(u'План по времени подтверджающий', track_visibility='onchange')
     got_approver = fields.Boolean(u'С подтверждающим', track_visibility='onchange')
     amount = fields.Float(u'Бюджет', track_visibility='onchange')
-    mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса', track_visibility='onchange')
-    mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
+    mark_state = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7')], string=u'Оценка статуса', track_visibility='onchange')
+    mark_result = fields.Selection([('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7')], string=u'Оценка результата', track_visibility='onchange')
 
     job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null", help=u'Задача родитель')
     job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True, help=u'Цель из задачи')
-    aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null" , help=u'Цель для прямой привязки минуя задачу')
+    aim_id = fields.Many2one('kro.aim', string=u'Цель', ondelete="set null", help=u'Цель для прямой привязки минуя задачу')
     problem_id = fields.Many2one(related='job_aim_id.problem_id', string=u'Проблема', readonly=True, help=u'Проблема из цели из родительской задачи')
     problem_project_id = fields.Many2one(related='job_aim_id.problem_id.kro_project_id', string=u'Проект', readonly=True, help=u'Проект из проблемы из цели из родительской задачи')
     aim_project_id = fields.Many2one(related='job_aim_id.project_id', string=u'Проект', readonly=True, help=u'Проект из цели из родительской задачи (привязанный непосредственно к цели проект минуя проблему)')
@@ -697,7 +697,7 @@ class Task(models.Model):
 
     @api.model
     def _store_history(self, ids):
-        return True
+        return ids
 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(Task, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
