@@ -1,2 +1,3 @@
-# kro
-extended project management, crm
+# SMART project management
+
+Odoo extended project management modules with SMART approach.
