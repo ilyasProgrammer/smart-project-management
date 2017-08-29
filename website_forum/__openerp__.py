@@ -14,8 +14,9 @@ Ask questions, get answers, no distractions
     'depends': [
         'auth_signup',
         'gamification',
-        'website_mail',
-        'website_partner'
+        'website_mail_kro',
+        'website_partner',
+        'website_field_autocomplete'
     ],
     'data': [
         'data/forum_data.xml',
