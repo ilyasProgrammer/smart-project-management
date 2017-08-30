@@ -21,6 +21,7 @@
         'views.xml',
         'data/data.xml',
         'data/task_sequence.xml',
+        'reports.xml',
     ],
     'demo': [
     ],

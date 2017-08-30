@@ -2,4 +2,5 @@
 
 from . import models
 from . import event
+from . import reports
 
