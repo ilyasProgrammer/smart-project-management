@@ -752,25 +752,6 @@
             </tree>
         </field>
     </record>
-    <record id="view_task_report_estimate" model="ir.ui.view">
-        <field name="name">project.task.tree.report.estimate</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
-        <field name="arch" type="xml">
-            <tree position="replace">
-                <tree string="Задания">
-                    <field name="current_user_id" string="Ответственный"/>
-                    <field name="date_end"/>
-                    <field name="name" string="Задание"/>
-                    <field name="project_id"/>
-                    <!--<field name="description"/>-->
-                    <field name="effective_hours"/>
-                    <field name="mark_state"/>
-                    <field name="mark_result"/>
-                </tree>
-            </tree>
-        </field>
-    </record>
     <record id="view_task_search_form" model="ir.ui.view">
         <field name="name">project.task.search.form</field>
         <field name="model">project.task</field>
@@ -871,14 +852,6 @@
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_task_tree"/>
     </record>
-    <record id="action_task_report_estimate" model="ir.actions.act_window">
-        <field name="name">Задания</field>
-        <field name="res_model">project.task</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_task_report_estimate"/>
-        <field name="search_view_id" ref="view_task_search_form"/>
-        <field name="context">{"search_default_my_tasks":1}</field>
-    </record>
     <record id="action_task_gantt" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">gantt</field>
@@ -914,6 +887,56 @@
     <record model="ir.ui.menu" id="project.menu_projects">
         <field name="groups_id" eval="[(6,0,[ref('kro.make_invisible')])]"/>
     </record>
+    <!--ОТЧЕТЫ-->
+    <record id="marks_report_tree" model="ir.ui.view">
+        <field name="name">project.task.tree.report.estimate</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <tree default_group_by="current_user_id">
+                <field name="current_user_id" string="Ответственный"/>
+                <field name="date_end"/>
+                <field name="name" string="Задание"/>
+                <field name="project_id"/>
+                <!--<field name="description"/>-->
+                <field name="effective_hours"/>
+                <field name="mark_state"/>
+                <field name="mark_result"/>
+            </tree>
+        </field>
+    </record>
+    <record id="marks_report_search" model="ir.ui.view">
+        <field name="name">project.task.search.report.estimate</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <search default_group_by="current_user_id">
+                <field name="current_user_id" string="Ответственный"/>
+                <field name="date_end"/>
+                <field name="name" string="Задание"/>
+                <field name="project_id"/>
+                <!--<field name="description"/>-->
+                <field name="effective_hours"/>
+                <field name="mark_state"/>
+                <field name="mark_result"/>
+                <group expand="0" string="Group By">
+                    <filter string="Ответственный" name="user" context="{'group_by':'current_user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_marks_report_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="marks_report_tree"/>
+        <field name="act_window_id" ref="action_marks_report"/>
+    </record>
+    <record id="action_marks_report" model="ir.actions.act_window">
+        <field name="name">Задания</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="marks_report_search"/>
+        <field name="search_view_id" ref="marks_report_search"/>
+        <field name="context">{'search_default_user': 1}</field>
+    </record>
     <!--МЕНЮ-->
     <menuitem id="project.menu_project_config" name="Configuration" parent="base.menu_main_pm" sequence="100" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id="base.menu_project_general_settings" name="Settings" parent="project.menu_project_config" sequence="0" action="project.action_config_settings" groups="base.group_configuration"/>
@@ -925,7 +948,7 @@
     <menuitem id='menu_kro_jobs' action="action_job" name="Задачи" parent="kro_proj_menu" sequence="4" groups="project.group_project_manager,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
     <menuitem id='menu_kro_tasks' action="kro_actions_view_taskss" string="Задания" name="Задания" parent="kro_proj_menu" sequence="5"/>
     <menuitem id='menu_kro_tasks_tree' action="kro_actions_view_taskss_tree" string="Задания-список" name="Задания-список" parent="kro_proj_menu" sequence="6"/>
-    <menuitem id='menu_kro_tasks_report_est' action="action_task_report_estimate" string="Оценка заданий" name="Оценка заданий" parent="kro_proj_menu" sequence="7"/>
+    <menuitem id='menu_kro_tasks_report_est' action="action_marks_report" string="Оценка заданий" name="Оценка заданий" parent="kro_proj_menu" sequence="7"/>
     <menuitem id="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user,group_adm_bp,group_project_aim,group_project_obs,group_project_obs_max"/>
 </data>
 </openerp>
