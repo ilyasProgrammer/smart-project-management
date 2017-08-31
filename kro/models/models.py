@@ -499,8 +499,10 @@ class Task(models.Model):
     plan_time_ap = fields.Float(u'План по времени подтверджающий', track_visibility='onchange')
     got_approver = fields.Boolean(u'С подтверждающим', track_visibility='onchange')
     amount = fields.Float(u'Бюджет', track_visibility='onchange')
-    mark_state = fields.Integer(string=u'Оценка статуса', track_visibility='onchange', group_operator='avg')
-    mark_result = fields.Integer(string=u'Оценка результата', track_visibility='onchange', group_operator='avg')
+    mark_state = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка статуса', track_visibility='onchange')
+    mark_result = fields.Selection([('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7')], string=u'Оценка результата', track_visibility='onchange')
+    # mark_state = fields.Integer(string=u'Оценка статуса', track_visibility='onchange', group_operator='avg')
+    # mark_result = fields.Integer(string=u'Оценка результата', track_visibility='onchange', group_operator='avg')
 
     job_id = fields.Many2one('kro.job', string=u'Задача', ondelete="set null", help=u'Задача родитель')
     job_aim_id = fields.Many2one(related='job_id.aim_id', string=u'Цель', readonly=True, help=u'Цель из задачи')
