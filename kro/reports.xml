@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="mark_report_tree" model="ir.ui.view">
-         <field name="name">mark.report.tree</field>
-         <field name="model">mark.report</field>
-         <field name="arch" type="xml">
-             <tree string="mark_report">
-                 <field name="id"/>
-                 <field name="current_user_id"/>
-                 <field name="date_end_ex"/>
-                 <field name="name"/>
-                 <field name="parent_project_id"/>
-                 <field name="mark_state"/>
-                 <field name="mark_result"/>
-             </tree>
-         </field>
-    </record>
-
-
-    <record id="action_mark_report_tree" model="ir.actions.act_window">
-        <field name="name">Оценка заданий</field>
-        <field name="res_model">mark.report</field>
-        <field name="view_id" ref="mark_report_tree"/>
-    </record>
-
-    <!--<menuitem action="action_mark_report_tree" id="menu_mark_report_tree" parent="kro_proj_menu" sequence="9"/>-->
-
 </data>
 </openerp>
